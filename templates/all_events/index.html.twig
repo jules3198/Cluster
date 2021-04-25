@@ -1,0 +1,102 @@
+{% extends 'base-front.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('allEvents') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('allEvents') }}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="wrapper wrapperBody">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8" >
+                    <h1 style="margin-bottom: 2rem">Evennements en cours</h1>
+                    {{ form_start(formSearch) }}
+                        <div class="form-row">
+                            <div class="col-md-2.5" style="margin-left: -2rem">
+                                {{ form_row(formSearch.min_price) }}
+                            </div>
+                            <div class="col-md-2.5">
+                                {{ form_row(formSearch.max_price) }}
+                            </div>
+                            <div class="col-md-7">
+                                {{ form_row(formSearch.date_start) }}
+                            </div>
+                        </div>
+                    <button class="btn btn-primary" type="submit">Rechercher</button>
+                    {{ form_end(formSearch) }}
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="container-fluid containerBody" >
+                        {% for event in events %}
+                            <div class="row block" >
+
+                                {% if event.pictures|length > 0 %}
+
+                                    <div id="{{ event.slug }}" class="col-md-5 picturessCard nopadding carousel slide mt-0" data-ride="carousel" >
+                                        <ol class="carousel-indicators">
+                                            {% for picutre in event.pictures %}
+                                                <li data-target="#{{ event.slug }}" data-slide-to="{{ loop.index-1 }}" class="{{ loop.first ? 'active': '' }} "></li>
+                                            {% endfor %}
+                                        </ol>
+
+                                        <div class="carousel-inner">
+                                            {% for pictures in event.pictures %}
+                                                <div class="carousel-item {{ loop.first ? 'active': '' }} ">
+                                                    <img src="{{ pictures.link }}" class="d-block img-fluid" alt="">
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+                                        <a class="carousel-control-prev" href="#{{ event.slug }}" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#{{ event.slug }}" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+
+                                {% else %}
+                                    <div class="col-md-5 picturessCard nopadding" >
+                                        <img src="http://placehold.it/120x120&text=image5" height="250px"  width="100%" alt="">
+                                    </div>
+                                {% endif %}
+
+                                <div class="col-md-7 textCard" onclick="location.href='{{ path('details_event', {id: event.id}) }}'">
+                                    <p class="name">{{ event.name }}</p>
+                                    <p class="price">{{ event.price }} €</p>
+                                    <p class="otherText">Locations</p>
+                                    <p>{{ event.location }}</p>
+                                    {% if "now"|date('Y-m-d') == event.dateStart|date('Y-m-d')  %}
+                                        <p class="otherText">Début: Aujourd' hui à {{ event.dateStart |date('H:i:s') }}</p>
+                                    {% else%}
+                                        <p class="otherText">Début: {{ event.dateStart |date('Y-m-d') }} à {{ event.dateStart |date('H:i:s') }}</p>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {{ knp_pagination_render(events) }}
+                    </div>
+
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
