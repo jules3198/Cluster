@@ -50,6 +50,12 @@ class AllEventsController extends AbstractController
      */
     public function show(Event $event): Response
     {
+
+        //Incrémenter le nombre de visite
+        $numberOfVisits = $event->getNumberOfVisits();
+        $event->setNumberOfVisits($numberOfVisits+1);
+        $this->getDoctrine()->getManager()->flush();
+
         return $this->render('all_events/details_event.html.twig', [
             'event' => $event,
         ]);
