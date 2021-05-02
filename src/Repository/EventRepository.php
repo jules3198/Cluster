@@ -67,6 +67,23 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupérer la liste des évenements en fonction d'un professionnel
+     * @param User $user
+     * @return int|mixed|string
+     */
+    public function findEventsByPro(User $user)
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.participants', 'participants')
+            ->where('DATE_DIFF(CURRENT_DATE(),e.date_start) <= 10 AND DATE_DIFF(CURRENT_DATE(),e.date_start) <= 0')
+            ->andwhere('e.user = :user')
+            ->orWhere('participants.id = :user')
+            ->setParameter("user",$user->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $user
      * @return int|mixed|string
      */
@@ -99,6 +116,10 @@ class EventRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @param EventSearch $search
+     * @return int|mixed|string
+     */
     public function getCurrentActiveEvents(EventSearch $search)
     {
         $query= $this->createQueryBuilder('e')
@@ -119,7 +140,7 @@ class EventRepository extends ServiceEntityRepository
 
         if($search->getDateStart()) {
             $date = $search->getDateStart();
-            dd($date);
+            //dd($date);
             $year= $date->format('Y');
             $month= $date->format('m');
             $day= $date->format('d');

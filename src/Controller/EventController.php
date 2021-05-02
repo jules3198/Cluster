@@ -26,13 +26,25 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class EventController extends AbstractController
 {
     /**
-     * @Route("/", name="event_index", methods={"GET"})
+     * @Route("/index_pro", name="event_index_pro", methods={"GET"})
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function index_pro(EventRepository $eventRepository): Response
+    {
+        return $this->render('event/index-pro.html.twig', [
+            'events' => $eventRepository->findEventsByPro($this->getUser())
+        ]);
+    }
+
+    /**
+     * @Route("/index_user", name="event_index_user", methods={"GET"})
      * @param EventRepository $eventRepository
      * @return Response
      */
     public function index(EventRepository $eventRepository): Response
     {
-        return $this->render('event/index.html.twig', [
+        return $this->render('event/index-user.html.twig', [
             'events' => $eventRepository->findNext10DaysEvents()
         ]);
     }
@@ -157,7 +169,7 @@ class EventController extends AbstractController
         $event->addParticipant($this->getUser());
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
-        return $this->redirectToRoute('event_index');
+        return $this->redirectToRoute('event_index_user');
     }
 
     /**
@@ -170,7 +182,7 @@ class EventController extends AbstractController
         $event->removeParticipant($this->getUser());
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
-        return $this->redirectToRoute('event_index');
+        return $this->redirectToRoute('event_index_user');
     }
 
     /**

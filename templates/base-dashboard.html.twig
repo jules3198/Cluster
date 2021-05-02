@@ -46,17 +46,23 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ path('event_new') }}">Créer un évènement </a>
-                        <a class="collapse-item" href="#">Evenement inscrit</a>
-                        <a class="collapse-item" href="{{ path('actual_event') }}">Evenement en cours</a>
-                        <a class="collapse-item" href="{{ path('past_event') }}">Evenement passé</a>
+                        {% if "ROLE_PRO" in app.user.roles%}
+                            <a class="collapse-item" href="{{ path('event_new') }}">Créer un évènement </a>
+                            <a class="collapse-item" href="{{ path('event_index_pro') }}">Gérer mes évènements </a>
+                        {% endif %}
+
+                        {% if  "ROLE_PRO" not in app.user.roles%}
+                            <a class="collapse-item" href="{{ path('event_index_user') }}">Consulter</a>
+                            <!--<a class="collapse-item" href="{#  #}{ path('event_index_') }}">Mes participications</a>-->
+                           <!-- <a class="collapse-item" href="{#  #}{ path('event_index') }}">Mes réservations</a>-->
+                        {% endif %}
+
                     </div>
                 </div>
             </li>
 
-
-
             <!-- Nav Item - Utilities Collapse Menu -->
+            {% if "ROLE_PRO" in app.user.roles%}
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                    aria-expanded="true" aria-controls="collapseUtilities">
@@ -66,26 +72,12 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ path('past_event') }}">Statistique d'évènement</a>
+                        <a class="collapse-item" href="{{ path('past_event') }}">Evenement passés</a>
+                        <a class="collapse-item" href="{{ path('actual_event') }}">Evenement en cours/futurs</a>
                     </div>
                 </div>
             </li>
-
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ path('discussions') }}" data-toggle="collapse" data-target="#collapseUtilities"
-                   aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="ic2 fas fa-envelope fa-fw"></i>
-                    <span>Messageries</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ path('discussions') }}">Mes conversations</a>
-
-                    </div>
-                </div>
-            </li>
+            {% endif %}
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -99,8 +91,7 @@
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="login.html">Voir mon niveau</a>
-                        <a class="collapse-item" href="register.html">Modifier mon profil</a>
+                        <a class="collapse-item" href="{{ path('profile_edit') }}">Modifier mon profil</a>
                     </div>
                 </div>
             </li>
