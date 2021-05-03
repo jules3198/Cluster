@@ -49,12 +49,11 @@
                         {% if "ROLE_PRO" in app.user.roles%}
                             <a class="collapse-item" href="{{ path('event_new') }}">Créer un évènement </a>
                             <a class="collapse-item" href="{{ path('event_index_pro') }}">Gérer mes évènements </a>
+                            <a class="collapse-item" href="{{ path('event_top_list') }}">Consulter la top liste </a>
                         {% endif %}
 
                         {% if  "ROLE_PRO" not in app.user.roles%}
                             <a class="collapse-item" href="{{ path('event_index_user') }}">Consulter</a>
-                            <!--<a class="collapse-item" href="{#  #}{ path('event_index_') }}">Mes participications</a>-->
-                           <!-- <a class="collapse-item" href="{#  #}{ path('event_index') }}">Mes réservations</a>-->
                         {% endif %}
 
                     </div>
