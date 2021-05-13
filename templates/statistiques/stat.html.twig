@@ -1,0 +1,86 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %} Statistiques {% endblock %}
+
+{% block stylesheets %}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css"
+      integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
+      crossorigin="anonymous" />
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+  <h1 align="center">Statistiques</h1>
+  <canvas id="myChart" width="450" height="100"></canvas>
+  <canvas id="percent" width="450" height="100"></canvas>
+  <br />
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
+        integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
+        crossorigin="anonymous"></script>
+
+<script>
+  let myChart = document.querySelector("#myChart")
+  var graph = new Chart(myChart, {
+    type: 'pie',
+    data: {
+      labels: ['Nombre de réservation',
+        'Nombre de promotion', 'Nombre de visites',
+        'Gains attendus (en €)','Gains obtenus (en €)','Gains perdu (en €)'],
+      datasets: [{
+        data: [{{ nbReservation}},{{ nbPromotion }}, {{ nbVisits }},
+  {{ gainsAttenduEvent }},
+  {{ gainsObetnuEvent }},{{ gainsPerduEvent  }} ],
+  backgroundColor: [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)'
+  ]
+  }]
+  }
+  })
+  var ctx = document.getElementById("percent");
+  var percent = new Chart(ctx, {
+    type: 'bar',
+    data:{
+      labels: ["Moyenne de participation"," % de Bénéfice", "% de perte"],
+      datasets: [{
+        label: 'Pourcentage',
+        data: [{{ MoyenneParticipation }}, {{ percentBeneficeEvent }}, {{ percentPerteEvent }}],
+  backgroundColor: [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)'
+  ],
+          borderWidth: 1
+  }]
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 0,
+          max: 100,
+          callback: function(value){return value+ "%"}
+        },
+      }]
+    }
+  }
+  });
+</script>
+
+{% endblock %}

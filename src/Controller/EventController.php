@@ -37,7 +37,8 @@ class EventController extends AbstractController
     public function indexPro(EventRepository $eventRepository): Response
     {
         return $this->render('event/index-pro.html.twig', [
-            'events' => $eventRepository->findEventsByPro($this->getUser())
+            'events' => $eventRepository->findEventsByPro($this->getUser()),
+            'eventsTopList' => $eventRepository->getEventsProByTopList()
         ]);
     }
 
@@ -109,7 +110,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="event_show", methods={"GET"})
+     * @Route("/{slug}", name="event_show", methods={"GET"})
      * @param Event $event
      * @return Response
      */
@@ -273,7 +274,7 @@ class EventController extends AbstractController
             $gainsPerduEvent= $percentPerteEvent * $gainsAttenduEvent / 100;
         }
 
-        return $this->render('statistiques/stats.html.twig', [
+        return $this->render('statistiques/stat.html.twig', [
             'nbReservation' => json_encode($nbReservation),
             'MoyenneParticipation' => json_encode($moyenneParticipation),
             'nbPromotion' => json_encode($nbPromotion),
@@ -358,10 +359,9 @@ class EventController extends AbstractController
 
     /**
      * @Route("/top_list", name="event_top_list", methods={"GET"})
-     * @param EventRepository $eventRepository
      * @return Response
      */
-    public function topLit(EventRepository $eventRepository): Response
+    public function topList(EventRepository $eventRepository): Response
     {
         return $this->render('event/top_list.html.twig', [
 
