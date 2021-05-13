@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-dashboard.html.twig' %}
 
 
 {% block stylesheets %}
@@ -11,15 +11,16 @@
     {{ parent() }}
 {% endblock %}
 
-{% block body %}
+{% block content %}
 
     <div class="container-fluid editContainer">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8 editBody">
+        <div class="row" style="margin-top: 4rem">
+            <div class="col-md-1"></div>
+            <div class="col-md-8">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-4 editLeft">
+                <h1>Modifier votre profil</h1>
+                <div class="row" style="margin-top: 4rem">
+                    <div class="col-md-4" style="text-align: center">
                         {% if user.userProfile != null %}
                             <img class="rounded-circle profile-avatar" height="200px" width="200px" src="{{ asset('images/users/'~user.userProfile.imageName) }}" alt="Card image cap">
                             {% else %}
@@ -27,12 +28,12 @@
                         {% endif %}
                         {{ form_start(imageForm)}}
                         {{ form_widget(imageForm.imageFile)}}
-                            <input type="submit" value="Modifier" class="btn btn-info btn-round btn-lg">
+                            <input style="margin-top: 1rem" type="submit" value="Modifier" class="btn btn-info btn-round btn-lg">
                         {{ form_end(imageForm)}}
                     </div>
                     <div class="col-md-8 editRight">
-                        <h2>Profile Edit</h2>
                         {{ form_start(form) }}
+
                         <div class="form-group">
                             <label for="uname">Firstname:</label>
                             {{ form_widget(form.firstname) }}

@@ -35,6 +35,7 @@ class User implements UserInterface
         $this->messages = new ArrayCollection();
         $this->friends = new ArrayCollection();
         $this->badges = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
     /**
@@ -174,6 +175,11 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity=UserPhoto::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $userProfile;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="user")
+     */
+    private $inscriptions;
 
     /**
      * @return int|null
@@ -699,5 +705,37 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Inscription[]
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): self
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getUser() === $this) {
+                $inscription->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
 }

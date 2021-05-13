@@ -3,14 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\Inscription;
+use App\Entity\User;
 use App\Entity\EventSearch;
 use App\Form\EventSearchType;
 use App\Repository\EventRepository;
+use App\Repository\InscriptionRepository;
+use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class AllEventsController extends AbstractController
 {
@@ -50,8 +55,37 @@ class AllEventsController extends AbstractController
      */
     public function show(Event $event): Response
     {
+        $user=$this->getUser();
         return $this->render('all_events/details_event.html.twig', [
             'event' => $event,
+            'user' => $user
         ]);
     }
+
+    /**
+     * @Route("/inscription/{event}/{user}", name="inscription", methods={"GET"})
+     */
+    public function inscript(Event $event,User $user,InscriptionRepository $inscriptionRepository): Response
+    {
+       dd($user->getInscriptions());
+        $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
+        if(empty($result)) {
+            $inscription = new Inscription();
+            $inscription->setEvent($event);
+            $inscription->setUser($user);
+            $date = new DateTime('now');
+            $inscription->setCreatedAt($date);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($inscription);
+            $entityManager->flush();
+        }else {
+            dd("impossible");
+        }
+        return $this->render('all_events/details_event.html.twig', [
+            'event' => $event,
+            'user' => $user
+        ]);
+    }
+
+
 }

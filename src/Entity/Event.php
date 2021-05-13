@@ -94,6 +94,12 @@ class Event
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="event", orphanRemoval=true)
      */
     private $pictures;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="event", orphanRemoval=true)
+     */
+    private $inscriptions;
     
     /**
      * Event constructor.
@@ -102,6 +108,7 @@ class Event
     {
         $this->restrictions = new ArrayCollection();
         $this->pictures = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
 
@@ -395,5 +402,36 @@ class Event
 
         return $this;
     }
+
+    /**
+     * @return Collection|Inscription[]
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): self
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getEvent() === $this) {
+                $inscription->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }

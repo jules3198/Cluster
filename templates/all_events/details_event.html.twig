@@ -125,8 +125,12 @@
                                         </div>
                                     </div>
                                     <div class="card-body backLine">
+                                        {% if user %}
+                                            <a href="{{ path('inscription', {'event': event.id,'user': user.id }) }}" class="btn btn-primary">S'inscrire</a>
+                                            {% else %}
+                                                <a href="#" class="btn btn-primary">connect</a>
+                                        {% endif %}
 
-                                        <a href="#" class="btn btn-primary">S'inscrire</a>
                                     </div>
                                 </div>
                             </div>

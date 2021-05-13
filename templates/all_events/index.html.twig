@@ -15,7 +15,7 @@
     <div class="wrapper wrapperBody">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2"></div>
+                <div class="col-md-1"></div>
                 <div class="col-md-8" >
                     <h1 style="margin-bottom: 2rem">Evennements en cours</h1>
                     {{ form_start(formSearch) }}
@@ -33,10 +33,10 @@
                     <button class="btn btn-primary" type="submit">Rechercher</button>
                     {{ form_end(formSearch) }}
                 </div>
-                <div class="col-md-2"></div>
+                <div class="col-md-1"></div>
             </div>
             <div class="row">
-                <div class="col-md-2"></div>
+                <div class="col-md-1"></div>
                 <div class="col-md-8">
                     <div class="container-fluid containerBody" >
                         {% for event in events %}
@@ -44,7 +44,7 @@
 
                                 {% if event.pictures|length > 0 %}
 
-                                    <div id="{{ event.slug }}" class="col-md-5 picturessCard nopadding carousel slide mt-0" data-ride="carousel" >
+                                    <div id="{{ event.slug }}" class="col-md-4 picturessCard nopadding carousel slide mt-0" data-ride="carousel" >
                                         <ol class="carousel-indicators">
                                             {% for picutre in event.pictures %}
                                                 <li data-target="#{{ event.slug }}" data-slide-to="{{ loop.index-1 }}" class="{{ loop.first ? 'active': '' }} "></li>
@@ -71,7 +71,7 @@
                                     </div>
 
                                 {% else %}
-                                    <div class="col-md-5 picturessCard nopadding" >
+                                    <div class="col-md-4 picturessCard nopadding" >
                                         <img src="http://placehold.it/120x120&text=image5" height="250px"  width="100%" alt="">
                                     </div>
                                 {% endif %}
@@ -88,6 +88,7 @@
                                     {% endif %}
 
                                 </div>
+                                <div class="col-md-1"></div>
                             </div>
                         {% endfor %}
 
