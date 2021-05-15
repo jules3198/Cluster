@@ -192,7 +192,7 @@ class EventRepository extends ServiceEntityRepository
             ->leftJoin('e.participants', 'participants')
             ->where('e.user = :user')
             ->orWhere('participants.id = :user')
-            ->andWhere('e.date_start >= CURRENT_DATE() and e.date_end >= CURRENT_DATE() ')
+            ->andWhere('e.date_start >= CURRENT_DATE() or e.date_end >= CURRENT_DATE() ')
             ->setParameter("user",$user->getId())
             ->getQuery()
             ->getResult();

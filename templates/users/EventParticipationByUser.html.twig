@@ -18,6 +18,7 @@
             <tr>
                 <td>{{ event.name }}</td>
                 <td>{{ event.datestart|date('d/m/Y') }}</td>
+                <td>{{ event.dateEnd|date('d/m/Y') }}</td>
                 <td>{{ event.price}}€</td>
             </tr>
         {% endfor %}

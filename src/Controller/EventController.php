@@ -49,9 +49,6 @@ class EventController extends AbstractController
      */
     public function indexUser(EventRepository $eventRepository): Response
     {
-
-        dd('Participés',$eventRepository->findEventParticipationByUser($this->getUser()),
-            'Inscription en cours',$eventRepository->findEventRegistrationByUser($this->getUser()));
         return $this->render('event/index-user.html.twig', [
             'events' => $eventRepository->findNext10DaysEvents()
         ]);
@@ -109,6 +106,35 @@ class EventController extends AbstractController
 
         return $this->render('event/actual_future.html.twig', [
             'events' => $eventRepository->getActualEtFutureEventsByPro($this->getUser())
+        ]);
+    }
+
+    /**
+     * Consulter la liste des événements auquels à participé un user
+     * @Route("/participation_by_user",name="events_participation_by_user")
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function eventsParticipedByUser(EventRepository $eventRepository): Response
+    {
+
+        return $this->render('users/EventParticipationByUser.html.twig', [
+            'eventsParticipatedByUser' => $eventRepository->findEventParticipationByUser($this->getUser()),
+        ]);
+    }
+
+    /**
+     * Consulter la liste des événements auquels il s'est inscrit qui n'ont pas encore commencé
+     * @Route("/registration_pending_by_user",name="events_registration_pending_by_user")
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function eventsRegistrationPendingByUser(EventRepository $eventRepository): Response
+    {
+
+        return $this->render('users/EventRegistrationPendingByUser.html.twig', [
+            'eventsRegistrationPendingByUser' =>
+                $eventRepository->findEventRegistrationByUser($this->getUser()),
         ]);
     }
 
@@ -370,35 +396,6 @@ class EventController extends AbstractController
         return $this->render('event/top_list.html.twig', [
 
             'eventsTopList' => $eventRepository->getEventsProByTopList()
-        ]);
-    }
-
-    /**
-     * Consulter la liste des événements auquels à participé un user
-     * @Route("/participation_by_user",name="events_participation_by_user")
-     * @param EventRepository $eventRepository
-     * @return Response
-     */
-    public function eventsParticipedByUser(EventRepository $eventRepository): Response
-    {
-
-        return $this->render('users/EventParticipationByUser.html.twig', [
-            'eventsParticipatedByUser' => $eventRepository->findEventParticipationByUser($this->getUser()),
-        ]);
-    }
-
-    /**
-     * Consulter la liste des événements auquels il s'est inscrit qui n'ont pas encore commencé
-     * @Route("/registration_pending_by_user",name="events_registration_pending_by_user")
-     * @param EventRepository $eventRepository
-     * @return Response
-     */
-    public function eventsRegistrationPendingByUser(EventRepository $eventRepository): Response
-    {
-
-        return $this->render('users/EventParticipationByUser.html.twig', [
-            'eventsRegistrationPendingByUser' =>
-                $eventRepository->findEventParticipationByUser($this->getUser()),
         ]);
     }
 }
