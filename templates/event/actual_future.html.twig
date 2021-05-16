@@ -1,6 +1,6 @@
 {% extends 'base-dashboard.html.twig' %}
 
-{% block subtitle %}Evenements dans le passé{% endblock %}
+{% block subtitle %}En cours et futurs{% endblock %}
 
 {% block content %}
 
@@ -8,8 +8,9 @@
         <thead>
         <tr>
             <th>Nom</th>
-            <th>Date de l'evenement</th>
-            <th>Nombre de participants</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Statistiques</th>
         </tr>
         </thead>
         <tbody>
@@ -17,7 +18,8 @@
             <tr>
                 <td>{{ event.name }}</td>
                 <td>{{ event.datestart|date('d/m/Y') }}</td>
-                <td>{{ event.participants|length }}</td>
+                <td>{{ event.dateEnd|date('d/m/Y') }}</td>
+                <td><a href="{{ path('event_stats', {'id': event.id}) }}"class="btn btn-outline-primary">Consulter</a></td>
             </tr>
         {% endfor %}
         </tbody>

@@ -1,0 +1,88 @@
+{% extends 'base-dashboard.html.twig' %}
+
+{% block subtitle %}Evenements CRUD{% endblock %}
+
+ {% block stylesheets %}
+     {{ parent() }}
+     {{ encore_entry_link_tags('front') }}
+ {% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('front') }}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>Mes Événements</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Date/Heure de début</th>
+            <th>Date/Heure de fin</th>
+            <th>Lieu</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.dateStart ? event.dateStart|date('d/m/Y H:i') : '' }}</td>
+                <td>{{ event.dateEnd ? event.dateEnd|date('d/m/Y H:i') : '' }}</td>
+                <td><a target="_blank"
+                       href="https://maps.google.fr/?q={{ event.location|replace({' ':'+'}) }}">{{ event.location }}</a>
+                </td>
+                <td>
+                    {% if  event.user != app.user and "ROLE_PRO" not in app.user.roles %}
+                        {% if app.user in event.participants %}
+                            <a href="{{ path('add_calendar',{id: event.id}) }}">Ajouter au calendrier</a>
+                            <a href="{{ path('event_desiste',{id: event.id}) }}" class="btn btn-outline-danger">Se
+                                désister</a>
+                        {% else %}
+                            {% if event.nbParticipants - event.participants|length > 0 %}
+                                <a href="{{ path('event_reserve',{id: event.id}) }}" class="btn btn-outline-primary">Reserver
+                                    sa
+                                    place</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+
+                    <a href="{{ path('event_show', {'id': event.id}) }}" class="btn btn-outline-primary">show</a>
+
+                    {% if event.user == app.user %}
+
+                        {% if event.user.roles != 'ROLE_USER' %}
+
+                            <a href="{{ path('event_edit', {'id': event.id}) }}"class="btn btn-outline-primary">edit</a>
+
+                            {% if event.bids|length > 0%}
+
+                                <a href="{{ path('event_edit_promote',{'id': event.id}) }} "class="btn btn-outline-primary">promouvoir</a>
+
+                            {%else%}
+
+                                <a href="{{ path('event_new_promote',{'id': event.id}) }}" class="btn btn-outline-primary">promouvoir</a>
+-
+                            {% endif %}
+
+                        {% endif %}
+                    {% endif %}
+
+                </td>
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+{% endblock %}

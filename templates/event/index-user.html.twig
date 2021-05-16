@@ -1,11 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-dashboard.html.twig' %}
 
 {% block subtitle %}Evenements à + 10 jours{% endblock %}
 
-{% block body %}
+
+{% block content %}
     {% for event in events %}
-        <h1>Les Evenements de {{ event.getUser().getFirstName() }}
-            {{ event.getUser().getLastName() }}</h1>
 
         <table class="table">
         <thead>
@@ -48,8 +47,6 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                <a href="{{ path('event_show', {'id': event.id}) }}">show</a>
-                <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
             </td>
         </tr>
     {% else %}
@@ -60,10 +57,5 @@
         </tbody>
         </table>
 
-        <a href="{{ path('event_new') }}">Create new</a>
     {% endfor %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
 {% endblock %}

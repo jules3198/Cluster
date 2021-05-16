@@ -35,7 +35,7 @@ class User implements UserInterface
         $this->messages = new ArrayCollection();
         $this->friends = new ArrayCollection();
         $this->badges = new ArrayCollection();
-        $this->inscriptions = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     /**
@@ -142,11 +142,6 @@ class User implements UserInterface
     private $activation_token;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="participants")
-     */
-    private $events;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Conversation::class, mappedBy="participants")
      */
     private $conversations;
@@ -177,9 +172,9 @@ class User implements UserInterface
     private $userProfile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="user")
      */
-    private $inscriptions;
+    private $participants;
 
     /**
      * @return int|null
@@ -692,8 +687,6 @@ class User implements UserInterface
         return $this->userProfile;
     }
 
-
-
     public function setUserProfile(UserPhoto $userProfile): self
     {
         // set the owning side of the relation if necessary
@@ -707,35 +700,33 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Inscription[]
+     * @return Collection|Participants[]
      */
-    public function getInscriptions(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->inscriptions;
+        return $this->participants;
     }
 
-    public function addInscription(Inscription $inscription): self
+    public function addParticipant(Participants $participant): self
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions[] = $inscription;
-            $inscription->setUser($this);
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeInscription(Inscription $inscription): self
+    public function removeParticipant(Participants $participant): self
     {
-        if ($this->inscriptions->removeElement($inscription)) {
+        if ($this->participants->removeElement($participant)) {
             // set the owning side to null (unless already changed)
-            if ($inscription->getUser() === $this) {
-                $inscription->setUser(null);
+            if ($participant->getUser() === $this) {
+                $participant->setUser(null);
             }
         }
 
         return $this;
     }
-
-
 
 }

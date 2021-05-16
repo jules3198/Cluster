@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-dashboard.html.twig' %}
 
 {% block title %}Event{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Evenement {{ event.getName() }}</h1>
 
-    <table class="table">
+    <table class="table" style="color: #f9f9f9;">
         <tbody>
 
         <tr>
@@ -40,12 +40,14 @@
             <td>{{ event.price }} €</td>
         </tr>
 
-        <tr>
-            <th>Restriction(s)</th>
-            {% for resctriction in event.restrictions %}
-                <td>{{ resctriction.getName() }},</td>
-            {% endfor %}
-        </tr>
+        {% for resctriction in event.restrictions %}
+            <tr>
+                <th>Restriction(s)</th>
+
+                <td>{{ resctriction.getName() }}</td>
+
+            </tr>
+        {% endfor %}
 
         <tr>
             <th>Status</th>
@@ -58,18 +60,20 @@
     {% if event.user == app.user %}
         <hr>
         <h2>Liste des participants</h2>
-        <table>
+        <table class="table" >
             <thead>
             <tr>
-                <th>Nom Prénom</th>
-                <th></th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
             {% for participant in event.participants %}
                 <tr>
-                    <td>{{ participant.firstname|capitalize }} {{ participant.lastname|upper }}</td>
-                    <td><a href="{{ path('event_remove_participant', {id:event.id, id_user: participant.id }) }}">Supprimer la
+                    <td>{{ participant.firstname|capitalize }}</td>
+                    <td>{{ participant.lastname|upper }}</td>
+                    <td><a href="{{ path('event_remove_participant', {id:event.id, id_user: participant.id }) }}"class="btn btn-outline-primary">Supprimer la
                             réservation</a>
                     </td>
                 </tr>
@@ -78,9 +82,19 @@
         </table>
     {% endif %}
 
-    <a href="{{ path('event_index') }}">back to list</a>
+    {% if "ROLE_PRO" not in app.user.roles %}
+        <a href="{{ path('event_index_user') }}"class="btn btn-outline-primary">back to list</a>
+    {%else%}
+        <a href="{{ path('event_index_pro') }}"class="btn btn-outline-primary">back to list</a>
+    {% endif %}
 
-    <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
+    {% if event.user == app.user %}
+        {% if event.user.roles != 'ROLE_USER' %}
 
-    {{ include('event/_delete_form.html.twig') }}
+            <a href="{{ path('event_edit', {'id': event.id}) }}"class="btn btn-outline-primary">edit</a>
+
+            {{ include('event/_delete_form.html.twig') }}
+
+        {% endif %}
+    {% endif %}
 {% endblock %}

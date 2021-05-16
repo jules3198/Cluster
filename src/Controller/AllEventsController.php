@@ -3,12 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\Inscription;
+use App\Entity\Participants;
 use App\Entity\User;
 use App\Entity\EventSearch;
 use App\Form\EventSearchType;
 use App\Repository\EventRepository;
-use App\Repository\InscriptionRepository;
+use App\Repository\ParticipantsRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AllEventsController extends AbstractController
 {
     /**
-     * @Route("/all/events", name="all_events")
+     * @Route("/", name="all_events")
      */
     public function index(EventRepository  $eventRepository, PaginatorInterface $paginator,Request $request): Response
     {
@@ -56,6 +56,11 @@ class AllEventsController extends AbstractController
     public function show(Event $event): Response
     {
         $user=$this->getUser();
+
+        //Incrémenter le nombre de visite
+        $numberOfVisits = $event->getNumberOfVisits();
+        $event->setNumberOfVisits($numberOfVisits+1);
+        $this->getDoctrine()->getManager()->flush();
         return $this->render('all_events/details_event.html.twig', [
             'event' => $event,
             'user' => $user
@@ -65,12 +70,12 @@ class AllEventsController extends AbstractController
     /**
      * @Route("/inscription/{event}/{user}", name="inscription", methods={"GET"})
      */
-    public function inscript(Event $event,User $user,InscriptionRepository $inscriptionRepository): Response
+    public function inscript(Event $event,User $user,ParticipantsRepository $inscriptionRepository): Response
     {
-       dd($user->getInscriptions());
+
         $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
         if(empty($result)) {
-            $inscription = new Inscription();
+            $inscription = new Participants();
             $inscription->setEvent($event);
             $inscription->setUser($user);
             $date = new DateTime('now');
@@ -78,12 +83,12 @@ class AllEventsController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($inscription);
             $entityManager->flush();
+            $this->addFlash("success","inscription réussie");
         }else {
-            dd("impossible");
+            $this->addFlash("exist","vous êtes déja inscrit");
         }
-        return $this->render('all_events/details_event.html.twig', [
-            'event' => $event,
-            'user' => $user
+        return $this->redirectToRoute('details_event', [
+            'id' => $event->getId()
         ]);
     }
 

@@ -81,8 +81,9 @@ class RegistrationProFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'SIRET'
-                ]
+                    'placeholder' => 'SIRET',
+                    'required' => false
+                ],
             ])
             ->add('siren', TextType::class, [
                 'constraints' => [
@@ -90,9 +91,11 @@ class RegistrationProFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'SIREN'
-                ]
-            ]);;
+                    'placeholder' => 'SIREN',
+                    'required' => false
+                ],
+
+            ]);
     }
 
     /**

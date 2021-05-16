@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -95,11 +96,20 @@ class Event
      */
     private $pictures;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Bid::class, mappedBy="event")
+     */
+    private $bids;
 
     /**
-     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="event", orphanRemoval=true)
+     * @ORM\Column(type="integer",options={"default":0},nullable=true)
      */
-    private $inscriptions;
+    private $numberOfVisits;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="event")
+     */
+    private $participants;
     
     /**
      * Event constructor.
@@ -108,7 +118,8 @@ class Event
     {
         $this->restrictions = new ArrayCollection();
         $this->pictures = new ArrayCollection();
-        $this->inscriptions = new ArrayCollection();
+        $this->bids = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
 
@@ -403,35 +414,78 @@ class Event
         return $this;
     }
 
+
+
     /**
-     * @return Collection|Inscription[]
+     * @return Collection|Bid[]
      */
-    public function getInscriptions(): Collection
+    public function getBids(): Collection
     {
-        return $this->inscriptions;
+        return $this->bids;
     }
 
-    public function addInscription(Inscription $inscription): self
+    public function addBid(Bid $bid): self
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions[] = $inscription;
-            $inscription->setEvent($this);
+        if (!$this->bids->contains($bid)) {
+            $this->bids[] = $bid;
+            $bid->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeInscription(Inscription $inscription): self
+    public function removeBid(Bid $bid): self
     {
-        if ($this->inscriptions->removeElement($inscription)) {
+        if ($this->bids->removeElement($bid)) {
             // set the owning side to null (unless already changed)
-            if ($inscription->getEvent() === $this) {
-                $inscription->setEvent(null);
+            if ($bid->getEvent() === $this) {
+                $bid->setEvent(null);
             }
         }
 
         return $this;
     }
 
+    public function getNumberOfVisits(): ?int
+    {
+        return $this->numberOfVisits;
+    }
+
+    public function setNumberOfVisits(int $numberOfVisits): self
+    {
+        $this->numberOfVisits = $numberOfVisits;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participants[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participants $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participants $participant): self
+    {
+        if ($this->participants->removeElement($participant)) {
+            // set the owning side to null (unless already changed)
+            if ($participant->getEvent() === $this) {
+                $participant->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

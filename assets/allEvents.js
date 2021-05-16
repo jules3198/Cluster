@@ -22,20 +22,9 @@ import './styles/allEvents.scss';
     }
 }*/
 
-$(document).ready(function() {
 
-    let dots = $("#dots");
-    let moreText = $("#more");
-    let btnText = $("#myBtn");
-    $("#myBtn").on( "click", function( event ) {
-        if (dots.style.display === "none") {
-            dots.style.display = "inline";
-            btnText.innerHTML = "Read more";
-            moreText.style.display = "none";
-        } else {
-            dots.style.display = "none";
-            btnText.innerHTML = "Read less";
-            moreText.style.display = "inline";
-        }
-    });
+$(window).on("load", function () {
+    if($('#hideDiv').length){
+        setTimeout(function() { $("#hideDiv").fadeOut(1500); }, 5000)
+    }
 });

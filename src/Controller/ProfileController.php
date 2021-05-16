@@ -47,9 +47,6 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('profile_show', [
-                'user' => $user,
-            ]);
         }else if($imageForm->isSubmitted() && $imageForm->isValid()) {
 
             if( $new == true ) {
@@ -64,9 +61,7 @@ class ProfileController extends AbstractController
             else {
                 $this->getDoctrine()->getManager()->flush();
             }
-            return $this->redirectToRoute('profile_show', [
-                'user' => $user,
-            ]);
+
         }
 
         return $this->render('profile/edit-profile.html.twig', [

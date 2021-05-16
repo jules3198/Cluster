@@ -8,15 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PublicController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
-    public function index(): Response
-    {
-        return $this->render('front/index.html.twig', [
-            'controller_name' => 'PublicController',
-        ]);
-    }
+
 
     /**
      * @Route("/about-us", name="aboutus")

@@ -1,10 +1,18 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('nav') }}
+{% endblock %}
 
+ {% block javascripts %}
+     {{ encore_entry_script_tags('nav') }}
+     {{ parent() }}
+ {% endblock %}
 {% block body %}
-    <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
+    {#  <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="{{ path('index') }}" rel="tooltip" target="_blank">
+                <a class="navbar-brand" href="{{ path('all_events') }}" rel="tooltip" target="_blank">
                     <img src="{{ asset('build/images/logo.png') }}" width="40%" alt="Circle image" class="img-fluid">
                 </a>
                 <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse"
@@ -61,6 +69,42 @@
                     {% endif %}
                 </ul>
             </div>
+        </div>
+    </nav> #}
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="position: fixed;top: 0;height: 150px;background-color: red;">
+        <!-- Brand -->
+        <a class="navbar-brand" href="#" id="logo">Cluster</a>
+        <!-- Links -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" style="margin-right: 5rem">
+            <ul class="navbar-nav">
+                <a class="nav-link"  href="{{ path('all_events') }}">Evènements</a>
+                {% if not app.user  %}
+                    <a class="nav-link" href="{{ path('app_login') }}">Se Connecter</a>
+                    <a class="nav-link" href="{{ path('app_register_user') }}">S'inscrire</a>
+                    <a class="nav-link" href="{{ path('app_register_pro') }}">Je suis un PRO</a>
+                {% endif %}
+                {% if app.user  %}
+                    <!-- Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" id="navbardrop" data-toggle="dropdown">
+                            <span class="mr-2 d-none d-lg-inline " style="margin-top: 10px">{{ app.user.firstname | capitalize }} {{ app.user.lastname | upper }}</span>
+                            {% if app.user.userProfile == null %}
+                                <img class="img-profile rounded-circle"
+                                     height="40px" src="https://eu.ui-avatars.com/api/?name={{ app.user.firstname }}+{{ app.user.lastname | capitalize }}">
+                            {% else %}
+                                <img class="img-profile rounded-circle"
+                                     height="40px" src="{{ asset('images/users/'~app.user.userProfile.imageName) }}">
+                            {% endif %}
+
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('dashboard') }}">Tableau de bord</a>
+                            <a class="dropdown-item" href="{{ path('profile_edit') }}">Editer profil</a>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
     {% block content %}{% endblock %}

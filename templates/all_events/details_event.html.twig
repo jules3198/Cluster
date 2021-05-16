@@ -5,9 +5,14 @@
     {{ encore_entry_link_tags('allEvents') }}
 {% endblock %}
 
+ {% block javascripts %}
+     {{ encore_entry_script_tags('allEvents') }}
+     {{ parent() }}
+ {% endblock %}
+
 {% block content %}
 
-    <div class="wrapper wrapperBody">
+    <div class="wrapperBody">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2"></div>
@@ -15,39 +20,48 @@
                     <div class="container-fluid containerBody">
                         <div class="row">
                             <div class="col-md-12">
-                                <p><a href="{{ path('all_events') }}"  class="previous">&laquo; Listes des évenements</a></p>
-                                {% if event.pictures|length > 0 and event.pictures|length == 1%}
+                                {% for message in app.flashes('success') %}
+                                    <div id="hideDiv" class="alert alert-success">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                                {% for message in app.flashes('exist') %}
+                                    <div id="hideDiv" class="alert alert-success">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                                {% if event.pictures|length == 1%}
                                     <div class="container-fluid indexImageContainer">
                                         <div class="row">
                                             <img src="{{ event.pictures[0].link }}" class="twoImage" alt="">
                                         </div>
                                     </div>
                                 {% elseif event.pictures|length > 0 and event.pictures|length == 2%}
-                                    <div class="container-fluid indexImageContainer">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <img src="{{ event.pictures[0].link }}" class="twoImage" alt="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <img src="{{ event.pictures[1].link }}"  class="twoImage" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% elseif event.pictures|length > 0 and event.pictures|length > 2%}
-                                    <div class="container-fluid indexImageContainer">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <img src="{{ event.pictures[0].link }}" class="twoImage" alt="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="smallImageDiv">
-                                                    <img src="{{ event.pictures[1].link }}"  class="smallImage" alt="">
+                                    <div id="{{ event.slug }}" class=" carousel slide mt-0" data-ride="carousel" style="margin-top: 2r
+;margin-bottom: 2rem">
+                                        <ol class="carousel-indicators">
+                                            {% for picutre in event.pictures %}
+                                                <li data-target="#{{ event.slug }}" data-slide-to="{{ loop.index-1 }}" class="{{ loop.first ? 'active': '' }} "></li>
+                                            {% endfor %}
+                                        </ol>
+
+                                        <div class="carousel-inner " >
+                                            {% for pictures in event.pictures %}
+                                                <div class="carousel-item {{ loop.first ? 'active': '' }}">
+                                                    <img src="{{ pictures.link }}" class="car2" alt="">
                                                 </div>
-                                                <div class="smallImageDiv">
-                                                    <img src="{{ event.pictures[2].link }}"  class="smallImage marginImage" alt="">
-                                                </div>
-                                            </div>
+
+                                            {% endfor %}
+
                                         </div>
+                                        <a class="carousel-control-prev" href="#{{ event.slug }}" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#{{ event.slug }}" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
                                     </div>
                                 {% endif %}
 
@@ -128,7 +142,7 @@
                                         {% if user %}
                                             <a href="{{ path('inscription', {'event': event.id,'user': user.id }) }}" class="btn btn-primary">S'inscrire</a>
                                             {% else %}
-                                                <a href="#" class="btn btn-primary">connect</a>
+                                                <a class="btn btn-primary" href="{{ path('app_login') }}">S'inscrire</a>
                                         {% endif %}
 
                                     </div>
@@ -143,9 +157,5 @@
         </div>
     </div>
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('allEvents') }}
-        {{ parent() }}
-    {% endblock %}
 
 {% endblock %}
