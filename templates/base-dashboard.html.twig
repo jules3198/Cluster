@@ -54,6 +54,9 @@
 
                         {% if  "ROLE_PRO" not in app.user.roles%}
                             <a class="collapse-item" href="{{ path('event_index_user') }}">Consulter</a>
+                            <a class="collapse-item" href="{{ path('events_participation_by_user') }}">Participés</a>
+                            <a class="collapse-item" href="{{ path('events_registration_pending_by_user') }}">Inscrits</a>
+
                         {% endif %}
 
                     </div>

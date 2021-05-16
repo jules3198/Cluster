@@ -37,7 +37,8 @@ class EventController extends AbstractController
     public function indexPro(EventRepository $eventRepository): Response
     {
         return $this->render('event/index-pro.html.twig', [
-            'events' => $eventRepository->findEventsByPro($this->getUser())
+            'events' => $eventRepository->findEventsByPro($this->getUser()),
+            'eventsTopList' => $eventRepository->getEventsProByTopList()
         ]);
     }
 
@@ -109,7 +110,36 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="event_show", methods={"GET"})
+     * Consulter la liste des événements auquels à participé un user
+     * @Route("/participation_by_user",name="events_participation_by_user")
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function eventsParticipedByUser(EventRepository $eventRepository): Response
+    {
+
+        return $this->render('users/EventParticipationByUser.html.twig', [
+            'eventsParticipatedByUser' => $eventRepository->findEventParticipationByUser($this->getUser()),
+        ]);
+    }
+
+    /**
+     * Consulter la liste des événements auquels il s'est inscrit qui n'ont pas encore commencé
+     * @Route("/registration_pending_by_user",name="events_registration_pending_by_user")
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function eventsRegistrationPendingByUser(EventRepository $eventRepository): Response
+    {
+
+        return $this->render('users/EventRegistrationPendingByUser.html.twig', [
+            'eventsRegistrationPendingByUser' =>
+                $eventRepository->findEventRegistrationByUser($this->getUser()),
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}", name="event_show", methods={"GET"})
      * @param Event $event
      * @return Response
      */
@@ -273,7 +303,7 @@ class EventController extends AbstractController
             $gainsPerduEvent= $percentPerteEvent * $gainsAttenduEvent / 100;
         }
 
-        return $this->render('statistiques/stats.html.twig', [
+        return $this->render('statistiques/stat.html.twig', [
             'nbReservation' => json_encode($nbReservation),
             'MoyenneParticipation' => json_encode($moyenneParticipation),
             'nbPromotion' => json_encode($nbPromotion),
@@ -361,7 +391,7 @@ class EventController extends AbstractController
      * @param EventRepository $eventRepository
      * @return Response
      */
-    public function topLit(EventRepository $eventRepository): Response
+    public function topList(EventRepository $eventRepository): Response
     {
         return $this->render('event/top_list.html.twig', [
 

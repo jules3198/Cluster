@@ -165,4 +165,36 @@ class EventRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param User $user
+     * @return int|mixed|string
+     */
+    public function findEventParticipationByUser(User $user)
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.participants', 'participants')
+            ->where('e.user = :user')
+            ->orWhere('participants.id = :user')
+            ->andWhere('e.date_start < CURRENT_DATE() and e.date_end < CURRENT_DATE() ')
+            ->setParameter("user",$user->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @return int|mixed|string
+     */
+    public function findEventRegistrationByUser(User $user)
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.participants', 'participants')
+            ->where('e.user = :user')
+            ->orWhere('participants.id = :user')
+            ->andWhere('e.date_start >= CURRENT_DATE() or e.date_end >= CURRENT_DATE() ')
+            ->setParameter("user",$user->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }

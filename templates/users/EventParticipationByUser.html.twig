@@ -1,0 +1,28 @@
+{% extends 'base-dashboard.html.twig' %}
+
+{% block subtitle %}Evenements Participé{% endblock %}
+
+{% block content %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Prix</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in eventsParticipatedByUser %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.datestart|date('d/m/Y') }}</td>
+                <td>{{ event.dateEnd|date('d/m/Y') }}</td>
+                <td>{{ event.price}}€</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
