@@ -14,7 +14,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('dashboard') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('all_events') }}">
                 <div class="sidebar-brand-text mx-3"><img src="{{ asset('build/images/logo.png') }}" width="70%"
                                                           alt="Circle image" class="img-fluid"></div>
             </a>
@@ -51,14 +51,13 @@
                             <a class="collapse-item" href="{{ path('event_index_pro') }}">Gérer mes évènements </a>
                             <a class="collapse-item" href="{{ path('event_top_list') }}">Consulter la top liste </a>
                         {% endif %}
-{#
+
                         {% if  "ROLE_PRO" not in app.user.roles%}
-                            <a class="collapse-item" href="{{ path('event_index_user') }}">Consulter</a>
                             <a class="collapse-item" href="{{ path('events_participation_by_user') }}">Participés</a>
                             <a class="collapse-item" href="{{ path('events_registration_pending_by_user') }}">Inscrits</a>
 
                         {% endif %}
-#}
+
                     </div>
                 </div>
             </li>
@@ -74,7 +73,6 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ path('past_event') }}">Statistique d'évènement</a>
                         <a class="collapse-item" href="{{ path('past_event') }}">Evenement passés</a>
                         <a class="collapse-item" href="{{ path('actual_future_event') }}">Evenement en cours/futurs</a>
                     </div>
@@ -85,27 +83,6 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                   aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Mon profil</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ path('profile_edit') }}">Modifier mon profil</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-
-
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

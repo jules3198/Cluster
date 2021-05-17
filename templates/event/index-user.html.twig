@@ -4,7 +4,7 @@
 
 
 {% block content %}
-    {% for event in events %}
+
 
         <table class="table">
         <thead>
@@ -21,7 +21,7 @@
         </tr>
         </thead>
         <tbody>
-
+    {% for event in events %}
         <tr>
             <td>{{ event.name }}</td>
             <td>{{ event.dateStart ? event.dateStart|date('d/m/Y H:i') : '' }}</td>
@@ -53,9 +53,9 @@
         <tr>
             <td colspan="13">no records found</td>
         </tr>
-
+    {% endfor %}
         </tbody>
         </table>
 
-    {% endfor %}
+
 {% endblock %}

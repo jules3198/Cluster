@@ -84,33 +84,4 @@
         </tbody>
     </table>
 
-    {% if "ROLE_PRO" in app.user.roles %}
-        <hr>
-        <h2>Liste des évenements en top-list</h2>
-
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>L'événement</th>
-                <th>Le professionnel</th>
-                <th>Le capital</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for allEventsByTopList in eventsTopList%}
-                <tr>
-                    <th style="color: #f9f9f9;">{{ allEventsByTopList.name }}</th>
-                    <th style="color: #f9f9f9;">{{ allEventsByTopList.user.firstname|capitalize }} {{ allEventsByTopList.user.lastname|upper }}</th>
-
-                    {% for bid in allEventsByTopList.bids%}
-                        <th style="color: #f9f9f9;">{{ bid.capital }} €</th>
-                    {% endfor%}
-                </tr>
-            {% endfor%}
-            </tbody>
-        </table>
-
-    {% endif%}
-
-
 {% endblock %}

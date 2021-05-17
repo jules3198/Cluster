@@ -77,8 +77,9 @@
         <!-- Links -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" style="margin-right: 5rem">
             <ul class="navbar-nav">
-                <a class="nav-link"  href="{{ path('all_events') }}">Evènements</a>
+
                 {% if not app.user  %}
+                    <a class="nav-link"  href="{{ path('all_events') }}">Evènements</a>
                     <a class="nav-link" href="{{ path('app_login') }}">Se Connecter</a>
                     <a class="nav-link" href="{{ path('app_register_user') }}">S'inscrire</a>
                     <a class="nav-link" href="{{ path('app_register_pro') }}">Je suis un PRO</a>
@@ -86,8 +87,9 @@
                 {% if app.user  %}
                     <!-- Dropdown -->
                     <li class="nav-item dropdown">
+                        <a class="nav-link" style="margin-top: 10px" href="{{ path('all_events') }}">Evènements</a>
                         <a class="nav-link " href="#" id="navbardrop" data-toggle="dropdown">
-                            <span class="mr-2 d-none d-lg-inline " style="margin-top: 10px">{{ app.user.firstname | capitalize }} {{ app.user.lastname | upper }}</span>
+                            <span class="mr-2 d-none d-lg-inline " style="margin-top: 10px;font-size: 12px;font-weight: bold">{{ app.user.firstname | capitalize }} {{ app.user.lastname | upper }}</span>
                             {% if app.user.userProfile == null %}
                                 <img class="img-profile rounded-circle"
                                      height="40px" src="https://eu.ui-avatars.com/api/?name={{ app.user.firstname }}+{{ app.user.lastname | capitalize }}">

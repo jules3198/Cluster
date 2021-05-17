@@ -75,7 +75,7 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('event_index');
+            return $this->redirectToRoute('event_index_pro');
         }
 
         return $this->render('event/new.html.twig', [
@@ -118,7 +118,6 @@ class EventController extends AbstractController
      */
     public function eventsParticipedByUser(EventRepository $eventRepository): Response
     {
-
         return $this->render('users/EventParticipationByUser.html.twig', [
             'eventsParticipatedByUser' => $eventRepository->findEventParticipationByUser($this->getUser()),
         ]);
@@ -136,6 +135,19 @@ class EventController extends AbstractController
         return $this->render('users/EventRegistrationPendingByUser.html.twig', [
             'eventsRegistrationPendingByUser' =>
                 $eventRepository->findEventRegistrationByUser($this->getUser()),
+        ]);
+    }
+
+    /**
+     * @Route("/top_list", name="event_top_list", methods={"GET"})
+     * @param EventRepository $eventRepository
+     * @return Response
+     */
+    public function topList(EventRepository $eventRepository): Response
+    {
+        return $this->render('event/top_list.html.twig', [
+
+            'eventsTopList' => $eventRepository->getEventsProByTopList()
         ]);
     }
 
@@ -304,7 +316,7 @@ class EventController extends AbstractController
             $gainsPerduEvent= $percentPerteEvent * $gainsAttenduEvent / 100;
         }
 
-        return $this->render('statistiques/stat.html.twig', [
+        return $this->render('statistiques/stats.html.twig', [
             'nbReservation' => json_encode($nbReservation),
             'MoyenneParticipation' => json_encode($moyenneParticipation),
             'nbPromotion' => json_encode($nbPromotion),
@@ -387,16 +399,4 @@ class EventController extends AbstractController
 
     }
 
-    /**
-     * @Route("/top_list", name="event_top_list", methods={"GET"})
-     * @param EventRepository $eventRepository
-     * @return Response
-     */
-    public function topList(EventRepository $eventRepository): Response
-    {
-        return $this->render('event/top_list.html.twig', [
-
-            'eventsTopList' => $eventRepository->getEventsProByTopList()
-        ]);
-    }
 }
