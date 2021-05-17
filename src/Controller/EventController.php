@@ -29,30 +29,30 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventController extends AbstractController
 {
-    /*
+
     /**
      * @Route("/index_pro", name="event_index_pro", methods={"GET"})
      * @param EventRepository $eventRepository
      * @return Response
      */
-   /* public function indexPro(EventRepository $eventRepository): Response
+    public function indexPro(EventRepository $eventRepository): Response
     {
         return $this->render('event/index-pro.html.twig', [
             'events' => $eventRepository->findEventsByPro($this->getUser())
         ]);
-    } */
-/*
+    }
+
     /**
      * @Route("/index_user", name="event_index_user", methods={"GET"})
      * @param EventRepository $eventRepository
      * @return Response
      */
-    /*public function indexUser(EventRepository $eventRepository): Response
+    public function indexUser(EventRepository $eventRepository): Response
     {
         return $this->render('event/index-user.html.twig', [
             'events' => $eventRepository->findNext10DaysEvents()
         ]);
-    } */
+    }
 
     /**
      * @Route("/new", name="event_new", methods={"GET","POST"})
@@ -82,32 +82,32 @@ class EventController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-/*
+
     /**
      * @Route("/past",name="past_event")
      * @param EventRepository $eventRepository
      * @return Response
      */
-  /*  public function pastEvents(EventRepository $eventRepository): Response
+     public function pastEvents(EventRepository $eventRepository): Response
     {
 
         return $this->render('event/pasts.html.twig', [
             'events' => $eventRepository->getPastEvents($this->getUser()),
         ]);
     }
-/*
+
     /**
      * @Route("/actual_future",name="actual_future_event")
      * @param EventRepository $eventRepository
      * @return Response
      */
-   /* public function actualFutureEvents(EventRepository $eventRepository): Response
+    public function actualFutureEvents(EventRepository $eventRepository): Response
     {
 
         return $this->render('event/actual_future.html.twig', [
             'events' => $eventRepository->getActualEtFutureEventsByPro($this->getUser())
         ]);
-    } */
+    }
 
     /**
      * @Route("/{id}", name="event_show", methods={"GET"})
@@ -164,13 +164,13 @@ class EventController extends AbstractController
 
         return $this->redirectToRoute('event_index_pro');
     }
-/*
+
     /**
      * @Route("/reserve/{id}", name="event_reserve", methods={"GET"})
      * @param Event $event
      * @return RedirectResponse
      */
-    /*public function reserve(Event $event): RedirectResponse
+     public function reserve(Event $event): RedirectResponse
     {
         $event->addParticipant($this->getUser());
         $entityManager = $this->getDoctrine()->getManager();
@@ -183,7 +183,7 @@ class EventController extends AbstractController
      * @param Event $event
      * @return RedirectResponse
      */
-   /* public function desiste(Event $event): RedirectResponse
+     public function desiste(Event $event): RedirectResponse
     {
         $event->removeParticipant($this->getUser());
         $entityManager = $this->getDoctrine()->getManager();
@@ -198,14 +198,14 @@ class EventController extends AbstractController
      * @param int|null $id_user
      * @return RedirectResponse
      */
-    /*public function removeReservation(UserRepository $userRepository, Event $event, ?int $id_user): RedirectResponse
+    public function removeReservation(UserRepository $userRepository, Event $event, ?int $id_user): RedirectResponse
     {
         $user = $userRepository->find($id_user);
         $event->removeParticipant($user);
         $em = $this->getDoctrine()->getManager();
         $em->flush();
         return $this->redirectToRoute('event_show', ['id' => $event->getId()]);
-    } */
+    }
 
     /**
      * @Route("/add_calendar/{id}",name="add_calendar", methods={"GET"})
@@ -229,14 +229,14 @@ class EventController extends AbstractController
         exit;
     }
 
-  /*  /**
+    /**
      * @Route("/stats/{id}",name="event_stats", methods={"GET"})
      * @param Request $request
      * @param Event $event
      * @param EventRepository $eventRepository
      * @return Response
      */
-   /* public function stats(Request $request, Event $event, EventRepository $eventRepository) :Response
+    public function stats(Request $request, Event $event, EventRepository $eventRepository) :Response
     {
 
         $nbReservation = count($eventRepository->getEventStats($event)->getParticipants());
@@ -285,8 +285,8 @@ class EventController extends AbstractController
             'gainsPerduEvent' => json_encode($gainsPerduEvent),
             'nbVisits' => json_encode($nbVisitsByEvent)
         ]);
-    } */
-/*
+    }
+
     /**
      * @Route("/promote/{id}", name="event_new_promote", methods={"GET","POST"})
      * @param Request $request
@@ -294,7 +294,7 @@ class EventController extends AbstractController
      * @param BidRepository $bidRepository
      * @return Response
      */
-   /* public function promoteNewEvent(Request $request, Event $event, BidRepository $bidRepository): Response
+    public function promoteNewEvent(Request $request, Event $event, BidRepository $bidRepository): Response
     {
         $bid = new Bid();
 
@@ -321,8 +321,8 @@ class EventController extends AbstractController
             'bid' => $bid,
             'form' => $form->createView(),
         ]);
-    } */
-/*
+    }
+
     /**
      * @Route("/promote/{id}/edit", name="event_edit_promote", methods={"GET","POST"})
      * @param Request $request
@@ -330,7 +330,7 @@ class EventController extends AbstractController
      * @param BidRepository $bidRepository
      * @return Response
      */
-   /* public function promoteEditEvent(Request $request, Event $event, BidRepository $bidRepository): Response
+    public function promoteEditEvent(Request $request, Event $event, BidRepository $bidRepository): Response
     {
 
         $bid = $bidRepository->findCurrentBid($event);
@@ -356,17 +356,17 @@ class EventController extends AbstractController
         ]);
 
     }
-/*
+
     /**
      * @Route("/top_list", name="event_top_list", methods={"GET"})
      * @param EventRepository $eventRepository
      * @return Response
      */
-  /*  public function topLit(EventRepository $eventRepository): Response
+    public function topLit(EventRepository $eventRepository): Response
     {
         return $this->render('event/top_list.html.twig', [
 
             'eventsTopList' => $eventRepository->getEventsProByTopList()
         ]);
-    } */
+    }
 }
