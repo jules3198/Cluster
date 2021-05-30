@@ -49,7 +49,7 @@ class EventRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             //->leftJoin('e.participants', 'participants')
             ->where('e.user = :user')
-           // ->orWhere('participants.id = :user')
+            ///->orWhere('participants.id = :user')
             ->setParameter("user",$user->getId())
             ->getQuery()
             ->getResult();

@@ -23,6 +23,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @Route("/dashboard/events")
@@ -335,6 +336,7 @@ class EventController extends AbstractController
      * @param Event $event
      * @param BidRepository $bidRepository
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function promoteNewEvent(Request $request, Event $event, BidRepository $bidRepository): Response
     {
@@ -347,12 +349,16 @@ class EventController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $nbPromotion = 0;
-
             $bid->setProfessional($this->getUser())
                 ->setNbPromotion($nbPromotion + 1)
                 ->setEvent($event)
                 ->setCreatedAt(new \DateTime());
-            // $currentBid->setCapital($form->getData()->getCapital());
+
+            $arrayBackUpPromotion = [] ;
+            $arrayBackUpPromotion = $bid->getBackupPromotion();
+            array_push($arrayBackUpPromotion,$bid->getCapital());
+            $bid->setBackupPromotion($arrayBackUpPromotion);
+
             $entityManager->persist($bid);
             $entityManager->flush();
 
@@ -371,10 +377,10 @@ class EventController extends AbstractController
      * @param Event $event
      * @param BidRepository $bidRepository
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function promoteEditEvent(Request $request, Event $event, BidRepository $bidRepository): Response
     {
-
         $bid = $bidRepository->findCurrentBid($event);
 
         $form = $this->createForm(BidType::class, $bid);
@@ -387,6 +393,12 @@ class EventController extends AbstractController
             $bid->setNbPromotion($nbPromotion);
 
             $bid->setUpdatedAt(new \DateTime());
+
+            $arrayBackUpPromotion = [] ;
+            $arrayBackUpPromotion = $bid->getBackupPromotion();
+            array_push($arrayBackUpPromotion,$bid->getCapital());
+            $bid->setBackupPromotion($arrayBackUpPromotion);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('event_index_pro');
