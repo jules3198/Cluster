@@ -15,10 +15,10 @@ class BidType extends AbstractType
     {
         $builder
             ->add('capital',MoneyType::class, [
-                'label' => "Capital",
                 'attr' => [
                     'placeholder' => "veuillez saisir votre capital",
-                ],
+                    'class' => 'form-control',
+                ]
             ]);
     }
 

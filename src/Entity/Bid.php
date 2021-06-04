@@ -6,6 +6,7 @@ use App\Repository\BidRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BidRepository::class)
@@ -21,6 +22,7 @@ class Bid
 
     /**
      * @ORM\Column(type="float", options={"default":0})
+     * @Assert\PositiveOrZero(message="Attention ! il faut un float")
      */
     private $capital;
 
@@ -51,6 +53,11 @@ class Bid
      * @ORM\JoinColumn(nullable=true)
      */
     private $nbPromotion;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $backupPromotion = [];
 
 
     public function __construct()
@@ -134,5 +141,18 @@ class Bid
 
         return $this;
     }
-   
+
+    public function getBackupPromotion(): ?array
+    {
+        return $this->backupPromotion;
+    }
+
+    public function setBackupPromotion(?array $backupPromotion): self
+    {
+        $this->backupPromotion = $backupPromotion;
+
+        return $this;
+    }
+
+
 }

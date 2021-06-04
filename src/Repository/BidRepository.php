@@ -22,7 +22,7 @@ class BidRepository extends ServiceEntityRepository
 
 
     /**
-     * Trouve le l'enchère courante
+     * Trouve l'enchère courante
      * @param Event $event
      * @return Bid|null
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -35,6 +35,5 @@ class BidRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
 
 }
