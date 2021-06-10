@@ -1,0 +1,64 @@
+{% extends 'base-dashboard.html.twig' %}
+
+{% block title %}Participants{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" style="margin-top: 5rem">
+        <div class="row" id="hideDiv">
+            {% for message in app.flashes('unsubscribe') %}
+                <div  class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-6">
+                <h2>Liste des participants</h2>
+                {% if users|length > 0 %}
+                    <table class="table" style="margin-top: 3rem">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th style="font-weight: bold;font-size: 1rem">Prénom</th>
+                            <th style="font-weight: bold;font-size: 1rem">Nom</th>
+                            <th style="font-weight: bold;font-size: 1rem">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>
+                                    {% if user.userProfile == null %}
+                                        <img class="img-profile rounded-circle"
+                                             height="50px" src="https://eu.ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname | capitalize }}">
+                                    {% else %}
+                                        <img class="img-profile rounded-circle"
+                                             height="50px" src="{{ asset('images/users/'~user.userProfile.imageName) }}">
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.firstname|capitalize }}</td>
+                                <td>{{ user.lastname|upper }}</td>
+                                <td><a href="{{ path('delete_inscription_dashboard', {'event': event_id,'user': user.id}) }}"class="btn btn-danger">X</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="margin-top: 3rem">vous n'avez pas encore d'inscrit pour votre évenement</p>
+                {% endif %}
+
+            </div>
+            <div class="col-md-5"></div>
+        </div>
+    </div>
+
+    <script>
+        $(window).on("load", function () {
+            if($('#hideDiv').length){
+                setTimeout(function() { $("#hideDiv").fadeOut(1500); }, 5000)
+            }
+        });
+    </script>
+{% endblock %}

@@ -56,30 +56,12 @@
 
         </tbody>
     </table>
-
+    <a  href="{{ path('event_participants', {id: event.id}) }}" >Liste des participants</a>
     {% if event.user == app.user %}
-        <hr>
-        <h2>Liste des participants</h2>
-        <table class="table" >
-            <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for participant in event.participants %}
-                <tr>
-                    <td>{{ participant.firstname|capitalize }}</td>
-                    <td>{{ participant.lastname|upper }}</td>
-                    <td><a href="{{ path('event_remove_participant', {id:event.id, id_user: participant.id }) }}"class="btn btn-outline-primary">Supprimer la
-                            réservation</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+     {#
+     <hr>
+
+     #}
     {% endif %}
 
     {% if "ROLE_PRO" not in app.user.roles %}

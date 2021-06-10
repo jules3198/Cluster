@@ -85,9 +85,9 @@
                     <a class="nav-link" href="{{ path('app_register_pro') }}">Je suis un PRO</a>
                 {% endif %}
                 {% if app.user  %}
+                    <a class="nav-link" style="margin-top: 10px" href="{{ path('all_events') }}">Evènements</a>
                     <!-- Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link" style="margin-top: 10px" href="{{ path('all_events') }}">Evènements</a>
                         <a class="nav-link " href="#" id="navbardrop" data-toggle="dropdown">
                             <span class="mr-2 d-none d-lg-inline " style="margin-top: 10px;font-size: 12px;font-weight: bold">{{ app.user.firstname | capitalize }} {{ app.user.lastname | upper }}</span>
                             {% if app.user.userProfile == null %}

@@ -59,6 +59,7 @@
                                     <div class="card-footer">
                                         <input type="submit" value="Nous rejoindre"
                                                class="btn btn-info btn-round btn-lg">
+                                        <a style="float: right;margin-top: 1rem"  href="{{ path('app_forgot_password_request') }}" > mot de plasse oublié ?</a>
                                     </div>
                                     <input type="hidden" name="_csrf_token"
                                            value="{{ csrf_token('authenticate') }}"

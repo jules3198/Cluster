@@ -30,6 +30,11 @@
                                         {{ message }}
                                     </div>
                                 {% endfor %}
+                                {% for message in app.flashes('desist') %}
+                                    <div id="hideDiv" class="alert alert-success">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
                                 {% if event.pictures|length == 1%}
                                     <div class="container-fluid indexImageContainer">
                                         <div class="row">
@@ -140,7 +145,13 @@
                                     </div>
                                     <div class="card-body backLine">
                                         {% if user %}
-                                            <a href="{{ path('inscription', {'event': event.id,'user': user.id }) }}" class="btn btn-primary">S'inscrire</a>
+                                            {% if not inscription %}
+                                                <a href="{{ path('inscription', {'event': event.id,'user': user.id }) }}" class="btn btn-primary">S'inscrire</a>
+                                                {% else %}
+                                                    <p style="text-align: left">Vous êtes inscrit à ce évenement le:</p>
+                                                    <p style="text-align: left"> {{ inscriptionDate |date('Y-m-d') }} à {{ inscriptionDate |date('H:i:s') }}</p>
+                                                    <a href="{{ path('delete_inscription', {'event': event.id,'participant': participationId }) }}" class="btn btn-primary">Désister</a>
+                                            {% endif%}
                                             {% else %}
                                                 <a class="btn btn-primary" href="{{ path('app_login') }}">S'inscrire</a>
                                         {% endif %}

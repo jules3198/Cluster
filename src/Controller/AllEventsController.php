@@ -32,7 +32,7 @@ class AllEventsController extends AbstractController
         $events = $paginator->paginate(
             $donnees,
             $request->query->getInt('page', 1),
-            7// Nombre de résultats par page
+            12// Nombre de résultats par page
         );
         if($form->isSubmitted()){
             $search= $form->getData();
@@ -53,7 +53,7 @@ class AllEventsController extends AbstractController
     /**
      * @Route("/details/event/{id}", name="details_event", methods={"GET"})
      */
-    public function show(Event $event): Response
+    public function show(Event $event,ParticipantsRepository $inscriptionRepository): Response
     {
         $user=$this->getUser();
 
@@ -61,9 +61,21 @@ class AllEventsController extends AbstractController
         $numberOfVisits = $event->getNumberOfVisits();
         $event->setNumberOfVisits($numberOfVisits+1);
         $this->getDoctrine()->getManager()->flush();
+        $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
+        $already = false;
+        $creationDate = null;
+        $participationId = null;
+        if(!empty($result)) {
+            $already = true;
+            $creationDate = $result[0]->getCreatedAt();
+            $participationId = $result[0]->getId();
+        }
         return $this->render('all_events/details_event.html.twig', [
             'event' => $event,
-            'user' => $user
+            'user' => $user,
+            'inscription' => $already,
+            'inscriptionDate' => $creationDate,
+            'participationId' => $participationId
         ]);
     }
 
@@ -87,6 +99,20 @@ class AllEventsController extends AbstractController
         }else {
             $this->addFlash("exist","vous êtes déja inscrit");
         }
+        return $this->redirectToRoute('details_event', [
+            'id' => $event->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/desist/{event}/{participant}", name="delete_inscription", methods={"GET"})
+     */
+    public function desist(Participants $participant,Event $event,ParticipantsRepository $inscriptionRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($participant);
+        $em->flush();
+        $this->addFlash("desist","vous venez de vous désinscrire pour cet évenement");
         return $this->redirectToRoute('details_event', [
             'id' => $event->getId()
         ]);

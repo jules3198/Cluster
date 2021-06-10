@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Bid;
+use Swift_Mailer;
+use App\Entity\Participants;
+use App\Entity\User;
 use App\Form\EventType;
 use App\Form\BidType;
 use App\Repository\EventRepository;
 use App\Repository\BidRepository;
+use App\Repository\ParticipantsRepository;
 use App\Repository\UserRepository;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event as ICalEvent;
@@ -399,4 +403,44 @@ class EventController extends AbstractController
 
     }
 
+    /**
+     * @Route("/{id}/participants", name="event_participants", methods={"GET","POST"})
+     */
+    public function participants(Event $event, ParticipantsRepository  $participantsRepository): Response
+    {
+        $users = array();
+        $participants = $participantsRepository->getParticipants($event->getId());
+        foreach ($participants as $p ) {
+            array_push($users,$p->getUser());
+        }
+
+        return $this->render('event/participants.html.twig', [
+            'event_id' => $event->getId(),
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * @Route("/unsubscribe/{event}/{user}", name="delete_inscription_dashboard", methods={"GET"})
+     */
+    public function unsubscribe(User $user,Event $event, Swift_Mailer $mailer, ParticipantsRepository $participantsRepository): Response
+    {
+        $participant = $participantsRepository->findOneBy(["event"=>$event->getId(),"user"=>$user->getId()]);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($participant);
+        $em->flush();
+        $this->sendMail($user->getEmail(),$mailer);
+        $this->addFlash("unsubscribe","vous venez de supprimer la réservation d'un client");
+        return $this->redirectToRoute('event_participants', [
+            'id' => $event->getId()
+        ]);
+    }
+
+    public function sendMail($email,\Swift_Mailer $mailer) {
+        $message = (new \Swift_Message('Cluster'))
+            ->setFrom('virusbo001@gmail.com')
+            ->setTo($email)
+            ->setBody("votre réservation a été annulé par l'organisateur");
+        $mailer->send($message);
+    }
 }

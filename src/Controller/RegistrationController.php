@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Activate;
 use App\Entity\UserPhoto;
+use Swift_Mailer;
 use App\Form\RegistrationProFormType;
 use App\Form\RegistrationUserFormType;
 use App\Security\AppAuthenticator;
@@ -17,6 +19,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use DateTime;
 
 /**
  * Class RegistrationController
@@ -32,7 +35,7 @@ class RegistrationController extends AbstractController
      * @param AppAuthenticator $authenticator
      * @return Response
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator, Swift_Mailer $mailer): Response
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -51,12 +54,23 @@ class RegistrationController extends AbstractController
                 )
             );
             $user->setRoles(['ROLE_USER']);
-            $user->setActive(true);
+            $user->setActive(false);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+            $entityManager->refresh($user);
             // do anything else you need here, like send an email
+            $activate = new Activate();
+            $activate->setStatus(0);
+            $activate->setUser($user);
+            $date = new DateTime('now');
+            $activate->setUpdatedAt($date);
+            $entityManager->persist($activate);
+            $entityManager->flush();
+            $email = $user->getEmail();
+            $token = $activate->getToken();
+            $this->sendActivationMail($token,$email,$mailer);
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
@@ -116,5 +130,21 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register_pro.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+
+    public function sendActivationMail($token,$email,\Swift_Mailer $mailer) {
+        $message = (new \Swift_Message('Cluster'))
+            ->setFrom('virusbo001@gmail.com')
+            ->setTo($email)
+            ->setBody(
+                $this->renderView(
+                // templates/emails/registration.html.twig
+                    'emails/validation.html.twig',
+                    ['token' => $token]
+                ),
+                'text/html'
+            );
+        $mailer->send($message);
     }
 }

@@ -63,4 +63,17 @@ class ParticipantsRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Participants[] Returns an array of Participants objects
+     */
+    public function getParticipants($event_id)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.event = :ev_id')
+            ->setParameter('ev_id', $event_id)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 }
