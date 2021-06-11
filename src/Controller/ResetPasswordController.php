@@ -137,13 +137,13 @@ class ResetPasswordController extends AbstractController
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
-
         // Do not reveal whether a user account was found or not.
         if (!$user) {
             return $this->redirectToRoute('app_check_email');
         }
 
         try {
+
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
         } catch (ResetPasswordExceptionInterface $e) {
             // If you want to tell the user why a reset email was not sent, uncomment
@@ -154,27 +154,14 @@ class ResetPasswordController extends AbstractController
             //     'There was a problem handling your password reset request - %s',
             //     $e->getReason()
             // ));
-
             return $this->redirectToRoute('app_check_email');
         }
-/*
-        $email = (new TemplatedEmail())
-            ->from(new Address('julesgabiam31@gmail.com', 'Jules Guillaume'))
-            ->to($user->getEmail())
-            ->subject('Your password reset request')
-            ->htmlTemplate('reset_password/email.html.twig')
-            ->context([
-                'resetToken' => $resetToken,
-            ])
-        ;
-*/
-// https://procaresupport.com/gmail-less-secure-apps-setting/#:~:text=To%20enable%20the%20option%20in,Gmail%20article%20on%20this%20subject.
+
         $email = (new \Swift_Message('Cluster'))
         ->setFrom('virusbo001@gmail.com')
         ->setTo($user->getEmail())
         ->setBody(
             $this->renderView(
-            // templates/emails/registration.html.twig
                 'emails/registration.html.twig',
                 ['resetToken' => $resetToken->getToken()]
             ),

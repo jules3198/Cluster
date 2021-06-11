@@ -54,7 +54,7 @@ class ProfileController extends AbstractController
                 $userImage->setUserId($user);
                 $entityManager->persist($userImage);
                 $entityManager->flush();
-                return $this->redirectToRoute('profile_show', [
+                return $this->redirectToRoute('profile_edit', [
                     'user' => $user,
                 ]);
             }

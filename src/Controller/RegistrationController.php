@@ -145,6 +145,7 @@ class RegistrationController extends AbstractController
                 ),
                 'text/html'
             );
+
         $mailer->send($message);
     }
 }
