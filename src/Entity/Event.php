@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -24,6 +27,8 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -35,11 +40,22 @@ class Event
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today UTC",
+     *     message="La date de début doit être supérieure ou égale à la date du jour!")
+     * @Assert\Expression("this.getDateStart() <= this.getDateEnd()",
+     *     message="La date de début doit être inférieure ou égale à la date de fin!"
+     * )
      */
     private $date_start;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today UTC",
+     *     message="La date de fin doit être supérieure ou égale à la date du jour!")
+     * @Assert\Expression(
+     *     "this.getDateEnd() >= this.getDateStart()",
+     *     message="La date de fin doit être supérieure ou égale à la date de début!"
+     * )
      */
     private $date_end;
 
@@ -50,16 +66,24 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $location;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 500,
+     *      minMessage = "Votre description doit contenir au moins 10 caractères",
+     *      maxMessage = "Votre description doit contenir au plus 500 caractères")
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive(message="Il doit y avoir au moins un participant")
      */
     private $nb_participants;
 
@@ -88,13 +112,9 @@ class Event
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $price;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="event", orphanRemoval=true)
-     */
-    private $pictures;
 
     /**
      * @ORM\OneToMany(targetEntity=Bid::class, mappedBy="event")
@@ -110,16 +130,22 @@ class Event
      * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="event")
      */
     private $participants;
-    
+
+    /**
+     * @ORM\OneToMany(targetEntity=EventPicture::class, mappedBy="events")
+     */
+    private $eventPicture;
+
+
     /**
      * Event constructor.
      */
     public function __construct()
     {
         $this->restrictions = new ArrayCollection();
-        $this->pictures = new ArrayCollection();
         $this->bids = new ArrayCollection();
         $this->participants = new ArrayCollection();
+        $this->eventPicture = new ArrayCollection();
     }
 
 
@@ -383,39 +409,6 @@ class Event
         return $this;
     }
 
-
-    /**
-     * @return Collection|Picture[]
-     */
-    public function getPictures(): Collection
-    {
-        return $this->pictures;
-    }
-
-    public function addPicture(Picture $picture): self
-    {
-        if (!$this->pictures->contains($picture)) {
-            $this->pictures[] = $picture;
-            $picture->setEvent($this);
-        }
-
-        return $this;
-    }
-
-    public function removePicture(Picture $picture): self
-    {
-        if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
-            if ($picture->getEvent() === $this) {
-                $picture->setEvent(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-
     /**
      * @return Collection|Bid[]
      */
@@ -488,4 +481,33 @@ class Event
         return $this;
     }
 
+    /**
+     * @return Collection|EventPicture[]
+     */
+    public function getEventPicture(): Collection
+    {
+        return $this->eventPicture;
+    }
+
+    public function addEventPicture(EventPicture $eventPicture): self
+    {
+        if (!$this->eventPicture->contains($eventPicture)) {
+            $this->eventPicture[] = $eventPicture;
+            $eventPicture->setEvents($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventPicture(EventPicture $eventPicture): self
+    {
+        if ($this->eventPicture->removeElement($eventPicture)) {
+            // set the owning side to null (unless already changed)
+            if ($eventPicture->getEvents() === $this) {
+                $eventPicture->setEvents(null);
+            }
+        }
+
+        return $this;
+    }
 }

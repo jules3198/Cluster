@@ -2,10 +2,18 @@
 
 {% block title %}New Event{% endblock %}
 
+{% block javascripts %}
+
+    {{ encore_entry_script_tags('form') }}{{ parent() }}
+
+{% endblock %}
+
+
 {% block content %}
     <h1>Créer un nouvel évènement</h1>
 
     {{ include('event/_form.html.twig') }}
 
     <a href="{{ path('event_index_pro') }}">back to list</a>
+
 {% endblock %}

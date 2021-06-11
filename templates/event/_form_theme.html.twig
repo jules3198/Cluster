@@ -1,0 +1,17 @@
+
+
+{% block _event_event_pictures_widget %}
+    <ul id="event-pictures-fields-list"
+        data-prototype="{{ form_widget(prototype)|e }}"
+        data-widget-tags="{{ '<li></li>'|e }}"
+        data-widget-counter="{{ value|length }}"
+    >
+        {% for key,eventPictureForm in form.children %}
+            {{ form_widget(eventPictureForm) }}
+        {% endfor %}
+    </ul>
+
+    <button type="button"
+            class="add-another-collection-widget"
+            data-list-selector="#event-pictures-fields-list">Add another Event Picture</button>
+{% endblock %}

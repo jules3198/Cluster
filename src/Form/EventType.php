@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Event;
 use App\Entity\Restriction;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\File;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 
 class EventType extends AbstractType
 {
@@ -63,7 +67,32 @@ class EventType extends AbstractType
                 'multiple' => true,
                 'choice_label' => 'name',
                 'required' => false
+            ])
+            ->add('eventPicture', CollectionType::class, [
+                'label' => "Les images de l'Événement",
+                'entry_type' => EventPictureType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => false
             ]);
+
+        /*->add('pictures', FileType::class, [
+                    'required' => false,
+                    'mapped' => false,
+                    //'accept' => 'image/*',
+                    'multiple' => true,
+                    'label' => "Les images de l'Événement"
+                    /*'allow_delete' => true,
+                    'delete_label' => 'Remove Image',
+                    'download_label' => 'Download Image',
+                    'download_uri' => false,
+                    'image_uri' => true,
+                    //'imagine_pattern' => '...',
+                    'label' => 'Photos',
+                    'asset_helper' => true,*/
+
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

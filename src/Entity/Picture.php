@@ -35,9 +35,14 @@ class Picture
      */
     private $event;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="pictures")
+     */
+    private $events;
+
     public function __construct()
     {
-
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,6 +82,33 @@ class Picture
     public function setEvent(?Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->addPicture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removePicture($this);
+        }
 
         return $this;
     }

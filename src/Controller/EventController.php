@@ -73,6 +73,11 @@ class EventController extends AbstractController
             $event->setUser($this->getUser());
             $event->setStatus("Open");
 
+            foreach($form->getData()->getPictures() as $picture){
+
+                $event->addPicture($picture);
+            }
+
             $entityManager->persist($event);
             $entityManager->flush();
 
