@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Edit Event{% endblock %}
-
+ {% block javascripts %}
+     {{ encore_entry_script_tags('event_form') }}
+     {{ parent() }}
+ {% endblock %}
 {% block body %}
     <h1>Edit Event</h1>
 

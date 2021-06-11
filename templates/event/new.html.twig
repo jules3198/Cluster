@@ -1,7 +1,10 @@
 {% extends 'base-dashboard.html.twig' %}
 
 {% block title %}New Event{% endblock %}
-
+{% block javascripts %}
+    {{ encore_entry_script_tags('event_form') }}
+    {{ parent() }}
+{% endblock %}
 {% block content %}
     <h1>Créer un nouvel évènement</h1>
 

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Event;
 use App\Entity\Restriction;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 class EventType extends AbstractType
 {
@@ -63,7 +65,15 @@ class EventType extends AbstractType
                 'multiple' => true,
                 'choice_label' => 'name',
                 'required' => false
-            ]);
+            ])
+            ->add('eventImages', CollectionType::class, [
+                'entry_type' => EventImagesType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true
+            ])
+
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

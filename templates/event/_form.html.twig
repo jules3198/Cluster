@@ -1,4 +1,6 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+<ul class="tags" data-prototype="{{ form_widget(form.eventImages.vars.prototype)|e('html_attr') }}">
+    <button type="button" class="add_item_link" data-collection-holder-class="tags">Add a tag</button>
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
