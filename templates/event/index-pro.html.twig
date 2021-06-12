@@ -53,24 +53,38 @@
 
                     <a href="{{ path('event_show', {'slug': event.slug}) }}" class="btn btn-outline-primary">show</a>
 
-                    {% if event.user == app.user %}
+                    {% if is_granted('event_edit', event) %}
 
-                        {% if event.user.roles != 'ROLE_USER' %}
+                        {#  {% if event.user == app.user %}
 
-                            <a href="{{ path('event_edit', {'id': event.id}) }}"class="btn btn-outline-primary">edit</a>
+                            {% if event.user.roles != 'ROLE_USER' %}#}
 
-                            {% if event.bids|length > 0%}
-
-                                <a href="{{ path('event_edit_promote',{'id': event.id}) }} "class="btn btn-outline-primary">promouvoir</a>
-
-                            {%else%}
-
-                                <a href="{{ path('event_new_promote',{'id': event.id}) }}" class="btn btn-outline-primary">promouvoir</a>
--
-                            {% endif %}
-
-                        {% endif %}
+                                <a href="{{ path('event_edit', {'id': event.id}) }}"
+                                   class="btn btn-outline-primary">edit</a>
                     {% endif %}
+
+                                {% if event.bids|length > 0%}
+
+                                    {% if is_granted('edit_promote', event) %}
+
+                                        <a href="{{ path('event_edit_promote',{'id': event.id}) }}
+                                            "class="btn btn-outline-primary">promouvoir</a>
+
+                                    {% endif %}
+
+                                {%else%}
+
+                                    {% if is_granted('create_promote', event) %}
+
+                                        <a href="{{ path('event_new_promote',{'id': event.id}) }}"
+                                           class="btn btn-outline-primary">promouvoir</a>
+                                    {% endif %}
+-
+                                {% endif %}
+
+                        {#  {% endif %}
+
+                        {% endif %}#}
 
                 </td>
             </tr>
