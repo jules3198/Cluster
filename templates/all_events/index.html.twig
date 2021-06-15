@@ -93,7 +93,7 @@
                                     </div>
                                 {% endif %}
 
-                                <div class="textCard" onclick="location.href='{{ path('details_event', {id: event.id}) }}'">
+                                <div class="textCard" onclick="location.href='{{ path('details_event', {slug: event.slug}) }}'">
                                     <p class="name">{{ event.name }}</p>
                                     <p class="price">{{ event.price }} €</p>
                                     <p class="otherText">Locations</p>

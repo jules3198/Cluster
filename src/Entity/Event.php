@@ -64,7 +64,7 @@ class Event
     private $nb_participants;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -82,7 +82,7 @@ class Event
     private $updated_at;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Restriction::class, inversedBy="events")
+     * @ORM\ManyToMany(targetEntity=Restriction::class, inversedBy="events", cascade={"persist"})
      */
     private $restrictions;
 
@@ -92,12 +92,12 @@ class Event
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="event", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="event", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $pictures;
 
     /**
-     * @ORM\OneToMany(targetEntity=Bid::class, mappedBy="event")
+     * @ORM\OneToMany(targetEntity=Bid::class, mappedBy="event", cascade={"persist", "remove"})
      */
     private $bids;
 
@@ -107,7 +107,7 @@ class Event
     private $numberOfVisits;
 
     /**
-     * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="event")
+     * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="event", cascade={"persist", "remove"})
      */
     private $participants;
     

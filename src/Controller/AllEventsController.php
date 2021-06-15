@@ -51,24 +51,25 @@ class AllEventsController extends AbstractController
     }
 
     /**
-     * @Route("/details/event/{id}", name="details_event", methods={"GET"})
+     * @Route("/details/event/{slug}", name="details_event", methods={"GET"})
      */
     public function show(Event $event,ParticipantsRepository $inscriptionRepository): Response
     {
         $user=$this->getUser();
-
         //Incrémenter le nombre de visite
         $numberOfVisits = $event->getNumberOfVisits();
         $event->setNumberOfVisits($numberOfVisits+1);
         $this->getDoctrine()->getManager()->flush();
-        $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
         $already = false;
         $creationDate = null;
         $participationId = null;
-        if(!empty($result)) {
-            $already = true;
-            $creationDate = $result[0]->getCreatedAt();
-            $participationId = $result[0]->getId();
+        if($user) {
+            $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
+            if(!empty($result)) {
+                $already = true;
+                $creationDate = $result[0]->getCreatedAt();
+                $participationId = $result[0]->getId();
+            }
         }
         return $this->render('all_events/details_event.html.twig', [
             'event' => $event,
