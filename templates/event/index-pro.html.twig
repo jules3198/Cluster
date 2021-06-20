@@ -28,6 +28,7 @@
         </thead>
         <tbody>
         {% for event in events %}
+
             <tr>
                 <td>{{ event.name }}</td>
                 <td>{{ event.dateStart ? event.dateStart|date('d/m/Y H:i') : '' }}</td>
@@ -38,14 +39,18 @@
                 <td>
                     {% if  event.user != app.user and "ROLE_PRO" not in app.user.roles %}
                         {% if app.user in event.participants %}
-                            <a href="{{ path('add_calendar',{id: event.id}) }}">Ajouter au calendrier</a>
-                            <a href="{{ path('event_desiste',{id: event.id}) }}" class="btn btn-outline-danger">Se
-                                désister</a>
+                            {% if is_granted('add_calendar', event) %}
+                                <a href="{{ path('add_calendar',{id: event.id}) }}">Ajouter au calendrier</a>
+                            {% else if is_granted('event_disclaimer', event) %}
+                                    <a href="{{ path('event_desiste',{id: event.id}) }}"
+                                       class="btn btn-outline-danger">Se désister</a>
+                                {% endif %}
                         {% else %}
                             {% if event.nbParticipants - event.participants|length > 0 %}
-                                <a href="{{ path('event_reserve',{id: event.id}) }}" class="btn btn-outline-primary">Reserver
-                                    sa
-                                    place</a>
+                                {% if is_granted('event_register', event) %}
+                                    <a href="{{ path('event_reserve',{id: event.id}) }}"
+                                    class="btn btn-outline-primary">Reserver sa place</a>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}

@@ -14,6 +14,11 @@ class EventVoter extends Voter
     const DELETE = "event_delete";
     const CREATE_PROMOTE = 'create_promote';
     const EDIT_PROMOTE = 'edit_promote';
+    const READ_STATE = "read_state";
+    const REGISTRATION = "event_register";
+    const DISCLAIMER = "event_disclaimer";
+    const ADD_CALENDAR = "add_calendar";
+    //const INDEX_USER = "index_user";
 
     private Security $security ;
     /**
@@ -34,7 +39,9 @@ class EventVoter extends Voter
     {
         /*Vérifie que l'attribut passé en paramètre existe dans le tableau
         et qu'on a bien une instance du sujet passé en paramètre*/
-        return in_array($attribute, [self::EDIT,self::DELETE, self::CREATE_PROMOTE, self::EDIT_PROMOTE])
+        return in_array($attribute, [self::EDIT,self::DELETE, self::CREATE_PROMOTE, self::EDIT_PROMOTE,
+                self::READ_STATE,self::REGISTRATION, self::DISCLAIMER, self::ADD_CALENDAR,
+                self::INDEX_USER])
             && $event instanceof Event;
     }
 
@@ -77,6 +84,21 @@ class EventVoter extends Voter
 
             case self::EDIT_PROMOTE :
                 return $this->canEditPromote($event,$user);
+
+            case self::READ_STATE :
+                return $this->canReadEventStat($event,$user);
+
+            case self::REGISTRATION :
+                return $this->canRegistrationEvent($event,$user);
+
+            case self::DISCLAIMER :
+                return $this->canDisclaimerEvent($event,$user);
+
+            case self::ADD_CALENDAR :
+                return $this->canAddCalendar($event,$user);
+
+            case self::INDEX_USER :
+                return $this->canAccessIndexUser($event,$user);
 
         }
 
@@ -124,4 +146,56 @@ class EventVoter extends Voter
     {
         return $user === $event->getUser();
     }
+
+    /**
+     * @param Event $event
+     * @param User $user
+     * @return bool
+     */
+    private function canReadEventStat(Event $event, User $user): bool
+    {
+        return $user === $event->getUser();
+    }
+
+    /**
+     * @param Event $event
+     * @param User $user
+     * @return bool
+     */
+    private function canRegistrationEvent(Event $event, User $user): bool
+    {
+        return !in_array("ROLE_PRO", $user->getRoles());
+        return true;
+    }
+
+    /**
+     * @param Event $event
+     * @param User $user
+     * @return bool
+     */
+    private function canDisclaimerEvent(Event $event, User $user): bool
+    {
+        return !in_array("ROLE_PRO", $user->getRoles());
+        return true;
+    }
+
+    /**
+     * @param Event $event
+     * @param User $user
+     * @return bool
+     */
+    private function canAddCalendar(Event $event, User $user): bool
+    {
+        return !in_array("ROLE_PRO", $user->getRoles());
+        return true;
+    }
+
+    /*private function canAccessIndexUser(Event $event, User $user): bool
+    {
+        if(!in_array("ROLE_PRO", $user->getRoles())){
+            return true ;
+        }
+        return false ;
+    }*/
+
 }

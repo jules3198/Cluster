@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Bid;
+use App\Entity\Participants;
 use App\Form\EventType;
 use App\Form\BidType;
 use App\Repository\EventRepository;
@@ -56,6 +57,8 @@ class EventController extends AbstractController
      */
     public function indexUser(EventRepository $eventRepository): Response
     {
+        //$this->denyAccessUnlessGranted(EventVoter::INDEX_USER, $this->getUser());
+
         return $this->render('event/index-user.html.twig', [
             'events' => $eventRepository->findNext10DaysEvents()
         ]);
@@ -68,7 +71,6 @@ class EventController extends AbstractController
      */
     public function new(Request $request): Response
     {
-
         $this->denyAccessUnlessGranted('ROLE_PRO', $this->getUser(),
             'Unable to access this page!');
 
@@ -81,11 +83,6 @@ class EventController extends AbstractController
 
             $event->setUser($this->getUser());
             $event->setStatus("Open");
-
-            foreach($form->getData()->getPictures() as $picture){
-
-                $event->addPicture($picture);
-            }
 
             $entityManager->persist($event);
             $entityManager->flush();
@@ -237,8 +234,14 @@ class EventController extends AbstractController
      */
      public function reserve(Event $event): RedirectResponse
     {
-        $event->addParticipant($this->getUser());
+        $this->denyAccessUnlessGranted(EventVoter::REGISTRATION, $event);
+        $participant = new Participants();
+        $participant->setUser($this->getUser());
+        $participant->setEvent($event);
+        $participant->setCreatedAt(new \DateTime('now'));
+
         $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
         $entityManager->flush();
         return $this->redirectToRoute('event_index_user');
     }
@@ -250,6 +253,8 @@ class EventController extends AbstractController
      */
      public function desiste(Event $event): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(EventVoter::DISCLAIMER, $event);
+
         $event->removeParticipant($this->getUser());
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
@@ -265,6 +270,9 @@ class EventController extends AbstractController
      */
     public function removeReservation(UserRepository $userRepository, Event $event, ?int $id_user): RedirectResponse
     {
+
+        $this->denyAccessUnlessGranted(EventVoter::ADD_CALENDAR, $event);
+
         $user = $userRepository->find($id_user);
         $event->removeParticipant($user);
         $em = $this->getDoctrine()->getManager();
@@ -300,9 +308,12 @@ class EventController extends AbstractController
      * @param Event $event
      * @param EventRepository $eventRepository
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function stats(Request $request, Event $event, EventRepository $eventRepository) :Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::READ_STATE, $event);
+
         $nbReservation = count($eventRepository->getEventStats($event)->getParticipants());
 
         $nbPlaceRestante = $eventRepository->getEventStats($event)->getNbParticipants();
@@ -347,7 +358,8 @@ class EventController extends AbstractController
             'gainsAttenduEvent' => json_encode($gainsAttenduEvent),
             'gainsObetnuEvent' => json_encode($gainsObtenuEvent),
             'gainsPerduEvent' => json_encode($gainsPerduEvent),
-            'nbVisits' => json_encode($nbVisitsByEvent)
+            'nbVisits' => json_encode($nbVisitsByEvent),
+            'event' => $event // C'est utile pour l'utilisation du is_granted() dans la vue statistique
         ]);
     }
 
