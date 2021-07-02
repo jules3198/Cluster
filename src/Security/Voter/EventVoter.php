@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 use App\Entity\Event;
 use App\Entity\User;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -18,7 +19,6 @@ class EventVoter extends Voter
     const REGISTRATION = "event_register";
     const DISCLAIMER = "event_disclaimer";
     const ADD_CALENDAR = "add_calendar";
-    //const INDEX_USER = "index_user";
 
     private Security $security ;
     /**
@@ -40,8 +40,7 @@ class EventVoter extends Voter
         /*Vérifie que l'attribut passé en paramètre existe dans le tableau
         et qu'on a bien une instance du sujet passé en paramètre*/
         return in_array($attribute, [self::EDIT,self::DELETE, self::CREATE_PROMOTE, self::EDIT_PROMOTE,
-                self::READ_STATE,self::REGISTRATION, self::DISCLAIMER, self::ADD_CALENDAR,
-                self::INDEX_USER])
+                self::READ_STATE,self::REGISTRATION, self::DISCLAIMER, self::ADD_CALENDAR])
             && $event instanceof Event;
     }
 
@@ -97,13 +96,10 @@ class EventVoter extends Voter
             case self::ADD_CALENDAR :
                 return $this->canAddCalendar($event,$user);
 
-            case self::INDEX_USER :
-                return $this->canAccessIndexUser($event,$user);
-
         }
 
         //return false;
-        throw new \LogicException('Ce code ne doit pas être atteint !');
+        throw new LogicException('Ce code ne doit pas être atteint !');
 
     }
 
@@ -189,13 +185,5 @@ class EventVoter extends Voter
         return !in_array("ROLE_PRO", $user->getRoles());
         return true;
     }
-
-    /*private function canAccessIndexUser(Event $event, User $user): bool
-    {
-        if(!in_array("ROLE_PRO", $user->getRoles())){
-            return true ;
-        }
-        return false ;
-    }*/
 
 }

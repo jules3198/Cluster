@@ -27,6 +27,10 @@
                             <th style="color: #f9f9f9;">{{ bid.capital }} €</th>
                         {% endfor%}
                     </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">no records found</td>
+                    </tr>
                 {% endfor%}
                 </tbody>
             </table>

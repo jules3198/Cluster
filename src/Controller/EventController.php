@@ -14,6 +14,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event as ICalEvent;
 use Eluceo\iCal\Property\Event\Geo;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +35,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class EventController extends AbstractController
 {
-
     /**
      * @Route("/index_pro", name="event_index_pro", methods={"GET"})
      * @param EventRepository $eventRepository
@@ -57,7 +57,9 @@ class EventController extends AbstractController
      */
     public function indexUser(EventRepository $eventRepository): Response
     {
-        //$this->denyAccessUnlessGranted(EventVoter::INDEX_USER, $this->getUser());
+
+        if(in_array('ROLE_PRO',$this->getUser()->getRoles()))
+            $this->denyAccessUnlessGranted(null,null,'Access Denied');
 
         return $this->render('event/index-user.html.twig', [
             'events' => $eventRepository->findNext10DaysEvents()
@@ -104,6 +106,9 @@ class EventController extends AbstractController
      public function pastEvents(EventRepository $eventRepository): Response
     {
 
+        $this->denyAccessUnlessGranted('ROLE_PRO', $this->getUser(),
+            'Unable to access this page!');
+
         return $this->render('event/pasts.html.twig', [
             'events' => $eventRepository->getPastEvents($this->getUser()),
         ]);
@@ -116,6 +121,9 @@ class EventController extends AbstractController
      */
     public function actualFutureEvents(EventRepository $eventRepository): Response
     {
+
+        $this->denyAccessUnlessGranted('ROLE_PRO', $this->getUser(),
+            'Unable to access this page!');
 
         return $this->render('event/actual_future.html.twig', [
             'events' => $eventRepository->getActualEtFutureEventsByPro($this->getUser())
@@ -130,6 +138,9 @@ class EventController extends AbstractController
      */
     public function eventsParticipedByUser(EventRepository $eventRepository): Response
     {
+        if(in_array('ROLE_PRO',$this->getUser()->getRoles()))
+            $this->denyAccessUnlessGranted(null,null,'Access Denied');
+
         return $this->render('users/EventParticipationByUser.html.twig', [
             'eventsParticipatedByUser' => $eventRepository->findEventParticipationByUser($this->getUser()),
         ]);
@@ -143,6 +154,8 @@ class EventController extends AbstractController
      */
     public function eventsRegistrationPendingByUser(EventRepository $eventRepository): Response
     {
+        if(in_array('ROLE_PRO',$this->getUser()->getRoles()))
+            $this->denyAccessUnlessGranted(null,null,'Access Denied');
 
         return $this->render('users/EventRegistrationPendingByUser.html.twig', [
             'eventsRegistrationPendingByUser' =>
@@ -189,7 +202,6 @@ class EventController extends AbstractController
      */
     public function delete(Request $request, Event $event): Response
     {
-
         $this->denyAccessUnlessGranted(EventVoter::DELETE, $event);
 
         if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
@@ -270,7 +282,6 @@ class EventController extends AbstractController
      */
     public function removeReservation(UserRepository $userRepository, Event $event, ?int $id_user): RedirectResponse
     {
-
         $this->denyAccessUnlessGranted(EventVoter::ADD_CALENDAR, $event);
 
         $user = $userRepository->find($id_user);
@@ -287,6 +298,8 @@ class EventController extends AbstractController
      */
     public function addCalendar(Event $event, HttpClientInterface $client)
     {
+        $this->denyAccessUnlessGranted(EventVoter::ADD_CALENDAR, $event);
+
         $vCalendar = new Calendar('13123');
         $iCalEvent = new ICalEvent();
 

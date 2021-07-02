@@ -41,10 +41,11 @@
                         {% if app.user in event.participants %}
                             {% if is_granted('add_calendar', event) %}
                                 <a href="{{ path('add_calendar',{id: event.id}) }}">Ajouter au calendrier</a>
-                            {% else if is_granted('event_disclaimer', event) %}
+                            {% elseif is_granted('event_disclaimer', event) %}}
                                     <a href="{{ path('event_desiste',{id: event.id}) }}"
                                        class="btn btn-outline-danger">Se désister</a>
-                                {% endif %}
+                            {% endif %}
+
                         {% else %}
                             {% if event.nbParticipants - event.participants|length > 0 %}
                                 {% if is_granted('event_register', event) %}
