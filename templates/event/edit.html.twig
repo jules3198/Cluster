@@ -1,16 +1,61 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-dashboard.html.twig' %}
 
 {% block title %}Edit Event{% endblock %}
- {% block javascripts %}
-     {{ encore_entry_script_tags('event_form') }}
-     {{ parent() }}
- {% endblock %}
-{% block body %}
-    <h1>Edit Event</h1>
+{% block javascripts %}
+    {{ encore_entry_script_tags('event_form') }}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
 
-    {{ include('event/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-9">
+                <h1>Editer votre Evenement</h1>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(form) }}
+                            <div class="form-group">
+                                {{ form_widget(form.name) }}
+                            </div>
 
-    <a href="{{ path('event_index_pro') }}">back to list</a>
+                            <div class="form-group">
+                                {{ form_widget(form.date_start) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.date_end) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.location) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.description) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.nb_participants) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.price) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_widget(form.restrictions) }}
+                            </div>
+                            <div class="col-md-12">
+                                <ul class="tags" data-prototype="{{ form_widget(form.eventImages.vars.prototype)|e('html_attr') }}"> </ul>
+                                <button type="button" class="add_item_link btn btn-info btn-round btn-lg" data-collection-holder-class="tags">Ajouter une photo</button><br>
+                            </div>
 
-    {{ include('event/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+
+                <button style="margin-top: 2rem" class="btn">{{ button_label|default('Modifier') }}</button>
+                {{ form_end(form) }}
+                <br>
+                <a href="{{ path('event_index_pro') }}">back to list</a>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
 {% endblock %}

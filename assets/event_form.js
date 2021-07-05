@@ -3,6 +3,7 @@ const $ = require('jquery');
 import './resources/blk/blk.css';
 
 require('./resources/blk/blk.min');
+import './styles/event_form.scss';
 
 
 $(window).on("load", function () {
@@ -17,6 +18,7 @@ $(window).on("load", function () {
         addFormToCollection($collectionHolderClass);
     })
 });
+
 
 function addFormToCollection($collectionHolderClass) {
     // Get the ul that holds the collection of tags

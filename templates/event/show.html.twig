@@ -57,31 +57,16 @@
         </tbody>
     </table>
 
-    {% if event.user == app.user %}
-        <hr>
-        <h2>Liste des participants</h2>
-        <table class="table" >
-            <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for participant in event.participants %}
-                <tr>
-                    <td>{{ participant.firstname|capitalize }}</td>
-                    <td>{{ participant.lastname|upper }}</td>
-                    <td><a href="{{ path('event_remove_participant', {id:event.id, id_user: participant.id }) }}"class="btn btn-outline-primary">Supprimer la
-                            réservation</a>
-                    </td>
-                </tr>
+    <div class="row" style="width: 100%;margin-top: 2rem">
+        {% if event.eventImages|length > 0 %}
+            {% for image in event.eventImages %}
+                <div style="width: 23%; margin-right: 18px; float: left;height: 250px;background-color: #0f6848;margin-top: 10px">
+                    <img src="{{ asset('images/events/'~image.imageName) }}" height="100%"  width="100%" alt="">
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
+        {% endif %}
+    </div>
+<div class="row" style="margin-top: 2rem">
     {% if "ROLE_PRO" not in app.user.roles %}
         <a href="{{ path('event_index_user') }}"class="btn btn-outline-primary">back to list</a>
     {%else%}
@@ -97,4 +82,6 @@
 
         {% endif %}
     {% endif %}
+</div>
+
 {% endblock %}

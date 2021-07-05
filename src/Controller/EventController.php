@@ -183,6 +183,12 @@ class EventController extends AbstractController
         $form->handleRequest($request);
         $entityManager = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach($form->get("eventImages")->getData() as $image){
+                if($image->getImageName() == null && $image->getEvent() != null) {
+                    $entityManager->remove($image);
+                    $entityManager->flush();
+                }
+            }
             $images = $event->getEventImages();
             foreach($images as $key => $eventImage){
                 $eventImage->setEvent($event);
@@ -192,7 +198,9 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('event_index_pro');
+            return $this->redirectToRoute('event_edit',[
+                'id' => $event->getId()
+            ]);
         }
 
         return $this->render('event/edit.html.twig', [

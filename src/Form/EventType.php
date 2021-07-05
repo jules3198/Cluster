@@ -70,7 +70,8 @@ class EventType extends AbstractType
                 'entry_type' => EventImagesType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype' => true
+                'prototype' => true,
+                'label'=>false
             ])
 
         ;

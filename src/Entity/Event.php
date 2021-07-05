@@ -112,7 +112,7 @@ class Event
     private $participants;
 
     /**
-     * @ORM\OneToMany(targetEntity=EventImages::class, mappedBy="event")
+     * @ORM\OneToMany(targetEntity=EventImages::class, mappedBy="event", cascade={"persist", "remove"})
      */
     private $eventImages;
     

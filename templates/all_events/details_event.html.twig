@@ -30,25 +30,25 @@
                                         {{ message }}
                                     </div>
                                 {% endfor %}
-                                {% if event.pictures|length == 1%}
+                                {% if event.eventImages|length == 1%}
                                     <div class="container-fluid indexImageContainer">
                                         <div class="row">
-                                            <img src="{{ event.pictures[0].link }}" class="twoImage" alt="">
+                                            <img src="{{ asset('images/events/'~event.eventImages[0].imageName) }}" class="twoImage" alt="">
                                         </div>
                                     </div>
-                                {% elseif event.pictures|length > 0 and event.pictures|length == 2%}
+                                {% elseif event.eventImages|length > 0 and event.eventImages|length == 2%}
                                     <div id="{{ event.slug }}" class=" carousel slide mt-0" data-ride="carousel" style="margin-top: 2rem
 ;margin-bottom: 2rem">
                                         <ol class="carousel-indicators">
-                                            {% for picutre in event.pictures %}
+                                            {% for picutre in event.eventImages %}
                                                 <li data-target="#{{ event.slug }}" data-slide-to="{{ loop.index-1 }}" class="{{ loop.first ? 'active': '' }} "></li>
                                             {% endfor %}
                                         </ol>
 
                                         <div class="carousel-inner " >
-                                            {% for pictures in event.pictures %}
+                                            {% for pictures in event.eventImages %}
                                                 <div class="carousel-item {{ loop.first ? 'active': '' }}">
-                                                    <img src="{{ pictures.link }}" class="car2" alt="">
+                                                    <img src="{{ asset('images/events/'~pictures.imageName) }}" class="car2" alt="">
                                                 </div>
 
                                             {% endfor %}

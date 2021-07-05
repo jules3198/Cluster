@@ -15,7 +15,7 @@ class EventImagesType extends AbstractType
         $builder
             ->add('imageFile',VichImageType::class, [
                 'required' => false,
-                'download_uri' => true,
+                'download_uri' => false,
                 'image_uri' => true
             ]);
         ;
