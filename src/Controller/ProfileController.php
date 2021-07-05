@@ -33,7 +33,7 @@ class ProfileController extends AbstractController
      */
     public function edit(Request $request)
     {
-        $this->denyAccessUnlessGranted(EventVoter::EDIT, $this->getUser());
+        $this->denyAccessUnlessGranted(ProfileVoter::EDIT, $this->getUser());
 
         $new = false;
         $user=$this->getUser();

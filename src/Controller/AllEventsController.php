@@ -117,7 +117,7 @@ class AllEventsController extends AbstractController
         $em->flush();
         $this->addFlash("desist","vous venez de vous désinscrire pour cet évenement");
         return $this->redirectToRoute('details_event', [
-            'id' => $event->getId()
+            'slug' => $event->getSlug()
         ]);
     }
 

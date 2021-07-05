@@ -24,8 +24,9 @@
                                 {% if user.userProfile != null %}
                                     <img class="rounded-circle profile-avatar" height="200px" width="200px" src="{{ asset('images/users/'~user.userProfile.imageName) }}" alt="Card image cap">
                                 {% else %}
-                                    <img class="rounded-circle profile-avatar" height="200px" width="200px" src="{{ asset('images/users/user-image.jpg') }}" alt="Card image cap">
+                                    <img class="rounded-circle profile-avatar" height="200px" width="200px" src="{{ asset('images/users/user.png') }}" alt="Card image cap">
                                 {% endif %}
+                                <br>
                                 {{ form_start(imageForm)}}
                                 {{ form_widget(imageForm.imageFile)}}
                                 <input style="margin-top: 1rem" type="submit" value="Modifier" class="btn btn-info btn-round btn-lg">

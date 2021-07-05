@@ -103,7 +103,7 @@
                             {% if "ROLE_PRO" in app.user.roles%}
                                 <a class="dropdown-item" href="{{ path('event_index_pro') }}">Tableau de bord</a>
                                 {% else %}
-                                    <a class="dropdown-item" href="{{ path('actual_future_event') }}">Tableau de bord</a>
+                                    <a class="dropdown-item" href="{{ path('dashboard') }}">Tableau de bord</a>
                             {% endif %}
                             <a class="dropdown-item" href="{{ path('profile_edit') }}">Editer profil</a>
                             <a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a>
