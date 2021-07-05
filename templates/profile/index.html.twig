@@ -44,7 +44,10 @@
                                         {% endif %}
                                     </div>
                                     <div class="col-md-8">
-                                        <a style=" float: right" class="btn btn-info btn-round btn-lg" href="{{ path('profile_edit') }}">Modifier</a>
+                                        {% if is_granted('profile_edit', user) %}
+                                            <a style=" float: right" class="btn btn-info btn-round btn-lg"
+                                               href="{{ path('profile_edit') }}">Modifier</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

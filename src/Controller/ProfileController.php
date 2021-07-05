@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use App\Security\Voter\ProfileVoter;
 
 
 class ProfileController extends AbstractController
@@ -32,6 +33,8 @@ class ProfileController extends AbstractController
      */
     public function edit(Request $request)
     {
+        $this->denyAccessUnlessGranted(EventVoter::EDIT, $this->getUser());
+
         $new = false;
         $user=$this->getUser();
         $userImage = $user->getUserProfile();
