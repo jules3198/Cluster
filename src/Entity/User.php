@@ -177,6 +177,11 @@ class User implements UserInterface
     private $participants;
 
     /**
+     * @ORM\OneToMany(targetEntity=Event::class, mappedBy="user")
+     */
+    private $events;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int

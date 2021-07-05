@@ -24,6 +24,8 @@
 
 {% block javascripts %}
 
+    {% if is_granted('read_state', event) %}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
             integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
             crossorigin="anonymous"></script>
@@ -80,5 +82,10 @@
             }
         });
     </script>
+    {% else %}
+        <tr>
+            <td colspan="13">no records found</td>
+        </tr>
+    {% endif %}
 
 {% endblock %}

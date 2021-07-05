@@ -2,31 +2,28 @@
 
 namespace App\Form;
 
-use App\Entity\Bid;
+use App\Entity\EventPicture;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
-class BidType extends AbstractType
+class EventPictureType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('capital',MoneyType::class, [
-                'attr' => [
-                    'placeholder' => "veuillez saisir votre capital",
-                    'class' => 'form-control',
-                ]
+            ->add('picture_file',VichImageType::class, [
+                'required' => false,
+                'download_uri' => true,
+                'image_uri' => true
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Bid::class
-            ]);
-
+            'data_class' => EventPicture::class,
+        ]);
     }
 }

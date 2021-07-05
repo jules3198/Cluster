@@ -28,6 +28,7 @@ Encore
     .addEntry('allEvents','./assets/allEvents.js')
     .addEntry('nav','./assets/nav.js')
     .addEntry('event_form','./assets/event_form.js')
+    .addEntry('form','./assets/form.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
