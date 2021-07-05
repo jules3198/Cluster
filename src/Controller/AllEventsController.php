@@ -9,6 +9,7 @@ use App\Entity\EventSearch;
 use App\Form\EventSearchType;
 use App\Repository\EventRepository;
 use App\Repository\ParticipantsRepository;
+use App\Security\Voter\EventVoter;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,6 +73,7 @@ class AllEventsController extends AbstractController
      */
     public function inscript(Event $event,User $user,ParticipantsRepository $inscriptionRepository): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::REGISTRATION, $event);
 
         $result = $inscriptionRepository->checkIfInscription($event->getId(),$user->getId());
         if(empty($result)) {
