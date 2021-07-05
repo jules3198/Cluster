@@ -64,6 +64,16 @@
      #}
     {% endif %}
 
+    <div class="row" style="width: 100%;margin-top: 2rem">
+        {% if event.eventImages|length > 0 %}
+            {% for image in event.eventImages %}
+                <div style="width: 23%; margin-right: 18px; float: left;height: 250px;background-color: #0f6848;margin-top: 10px">
+                    <img src="{{ asset('images/events/'~image.imageName) }}" height="100%"  width="100%" alt="">
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+<div class="row" style="margin-top: 2rem">
     {% if "ROLE_PRO" not in app.user.roles %}
         <a href="{{ path('event_index_user') }}"class="btn btn-outline-primary">back to list</a>
     {%else%}
@@ -79,4 +89,6 @@
 
         {% endif %}
     {% endif %}
+</div>
+
 {% endblock %}

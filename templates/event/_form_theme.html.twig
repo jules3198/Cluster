@@ -1,0 +1,15 @@
+{% block _event_event_images_widget %}
+
+    <p>hesdffffffffffffff dggggggggggggggggg</p>
+    <ul id="event-images-fields-list"
+        data-prototype="{{ form_widget(form.eventImages.vars.prototype)|e('html_attr') }}"
+        data-index="{{ form.eventImages|length }}"
+        class="images"
+    >
+        {% for eventImageForm in form.eventImages %}
+            <p>{key}</p>
+        {% endfor %}
+    </ul>
+
+    <button type="button" class="add_item_link" data-collection-holder-class="images">Add a tag</button>
+{% endblock %}

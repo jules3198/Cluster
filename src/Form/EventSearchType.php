@@ -20,20 +20,25 @@ class EventSearchType extends AbstractType
                 'required'=>false,
                 'label'=>false,
                 'attr'=>[
-                    'placeholder'=>'prix minimal'
+                    'placeholder'=>'prix minimal',
+                    'class'=>'colorWhite'
                 ]
             ])
             ->add('max_price', IntegerType::class,[
                 'required'=>false,
                 'label'=>false,
                 'attr'=>[
-                    'placeholder'=>'prix maximal'
+                    'placeholder'=>'prix maximal',
+                    'class'=>'colorWhite'
                 ]
             ])
             ->add('date_start', DateType::class, [
                 'required'=>false,
                 'label' => "Date de début",
                 'widget' => 'single_text',
+                'attr'=>[
+                    'class'=>'textWhite'
+                ]
             ])
         ;
     }

@@ -1,11 +1,20 @@
 {% extends 'base-dashboard.html.twig' %}
 
 {% block title %}New Event{% endblock %}
-
+{% block javascripts %}
+    {{ encore_entry_script_tags('event_form') }}
+    {{ parent() }}
+{% endblock %}
 {% block content %}
-    <h1>Créer un nouvel évènement</h1>
-
-    {{ include('event/_form.html.twig') }}
-
-    <a href="{{ path('event_index_pro') }}">back to list</a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-9">
+                <h1>Créer un nouvel évènement</h1>
+                {{ include('event/_form.html.twig') }}
+                <a href="{{ path('event_index_pro') }}">back to list</a>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
 {% endblock %}

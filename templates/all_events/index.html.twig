@@ -56,19 +56,19 @@
                         {% for event in events %}
                             <div class="block" style="width: 23%; margin-right: 18px; float: left">
 
-                                {% if event.pictures|length > 1 %}
+                                {% if event.eventImages|length > 1 %}
 
                                     <div id="{{ event.slug }}" class="picturessCard nopadding carousel slide mt-0" data-ride="carousel" >
                                         <ol class="carousel-indicators">
-                                            {% for picutre in event.pictures %}
+                                            {% for picutre in event.eventImages %}
                                                 <li data-target="#{{ event.slug }}" data-slide-to="{{ loop.index-1 }}" class="{{ loop.first ? 'active': '' }} "></li>
                                             {% endfor %}
                                         </ol>
 
                                         <div class="carousel-inner">
-                                            {% for pictures in event.pictures %}
+                                            {% for pictures in event.eventImages %}
                                                 <div class="carousel-item {{ loop.first ? 'active': '' }} ">
-                                                    <img src="{{ pictures.link }}"  class="d-block img-fluid car1" alt="">
+                                                    <img  height="250px"  width="100%" src="{{ asset('images/events/'~pictures.imageName) }}" alt="{{ event.name }}">
                                                 </div>
 
                                             {% endfor %}
@@ -83,9 +83,9 @@
                                             <span class="sr-only">Next</span>
                                         </a>
                                     </div>
-                                {% elseif  event.pictures|length == 1 %}
+                                {% elseif  event.eventImages|length == 1 %}
                                     <div class="picturessCard nopadding" >
-                                        <img src="{{ event.pictures[0].link }}" height="250px"  width="100%" alt="">
+                                        <img src="{{ asset('images/events/'~event.eventImages[0].imageName) }}" height="250px"  width="100%" alt="">
                                     </div>
                                 {% else %}
                                     <div class="picturessCard nopadding" >
@@ -107,11 +107,15 @@
                                 </div>
                             </div>
                         {% endfor %}
-
-                        {{ knp_pagination_render(events) }}
                     </div>
-
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-8" style="margin-bottom: 3rem">
+                    {{ knp_pagination_render(events) }}
+                </div>
+                <div class="col-md-1"></div>
             </div>
         </div>
 {% endblock %}

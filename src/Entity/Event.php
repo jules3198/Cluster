@@ -110,6 +110,11 @@ class Event
      * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="event", cascade={"persist", "remove"})
      */
     private $participants;
+
+    /**
+     * @ORM\OneToMany(targetEntity=EventImages::class, mappedBy="event", cascade={"persist", "remove"})
+     */
+    private $eventImages;
     
     /**
      * Event constructor.
@@ -120,6 +125,7 @@ class Event
         $this->pictures = new ArrayCollection();
         $this->bids = new ArrayCollection();
         $this->participants = new ArrayCollection();
+        $this->eventImages = new ArrayCollection();
     }
 
 
@@ -482,6 +488,36 @@ class Event
             // set the owning side to null (unless already changed)
             if ($participant->getEvent() === $this) {
                 $participant->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EventImages[]
+     */
+    public function getEventImages(): Collection
+    {
+        return $this->eventImages;
+    }
+
+    public function addEventImage(EventImages $eventImage): self
+    {
+        if (!$this->eventImages->contains($eventImage)) {
+            $this->eventImages[] = $eventImage;
+            $eventImage->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventImage(EventImages $eventImage): self
+    {
+        if ($this->eventImages->removeElement($eventImage)) {
+            // set the owning side to null (unless already changed)
+            if ($eventImage->getEvent() === $this) {
+                $eventImage->setEvent(null);
             }
         }
 

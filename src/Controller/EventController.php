@@ -72,7 +72,11 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
+            $eventImages = $event->getEventImages();
+            foreach($eventImages as $key => $eventImage){
+                $eventImage->setEvent($event);
+                $eventImages->set($key,$eventImage);
+            }
             $event->setUser($this->getUser());
             $event->setStatus("Open");
 
@@ -181,11 +185,26 @@ class EventController extends AbstractController
     {
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-
+        $entityManager = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            foreach($form->get("eventImages")->getData() as $image){
+                if($image->getImageName() == null && $image->getEvent() != null) {
+                    $entityManager->remove($image);
+                    $entityManager->flush();
+                }
+            }
+            $images = $event->getEventImages();
+            foreach($images as $key => $eventImage){
+                $eventImage->setEvent($event);
+                $images->set($key,$eventImage);
+            }
 
-            return $this->redirectToRoute('event_index_pro');
+            $entityManager->persist($event);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('event_edit',[
+                'id' => $event->getId()
+            ]);
         }
 
         return $this->render('event/edit.html.twig', [
