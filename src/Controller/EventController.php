@@ -348,7 +348,11 @@ class EventController extends AbstractController
     public function stats(Request $request, Event $event, EventRepository $eventRepository) :Response
     {
         $this->denyAccessUnlessGranted(EventVoter::READ_STATE, $event);
+        if(!$eventRepository->getEventStats($event) ) {
+            dd("hello");
+        }else {
 
+        }
         $nbReservation = count($eventRepository->getEventStats($event)->getParticipants());
 
         $nbPlaceRestante = $eventRepository->getEventStats($event)->getNbParticipants();
@@ -523,3 +527,9 @@ class EventController extends AbstractController
         $mailer->send($message);
     }
 }
+
+
+
+// https://codelabs.eleven-labs.com/course/fr/creez-un-chat-avec-symfony-et-mercure/
+
+// https://nouvelle-techno.fr/actualites/live-coding-utilisation-de-stripe

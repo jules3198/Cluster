@@ -93,7 +93,7 @@ class RegistrationController extends AbstractController
      * @return Response
      * @throws TransportExceptionInterface
      */
-    public function registerProfessional(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer): Response
+    public function registerProfessional(Request $request, UserPasswordEncoderInterface $passwordEncoder, Swift_Mailer $mailer): Response
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -117,12 +117,16 @@ class RegistrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            $email = (new Email())
-                ->from('no-reply@cluster.fr')
-                ->to($user->getEmail())
-                ->subject('Compte en cours d\'activation')
-                ->html('<p>Bonjour</p><p>Votre compte est en cours de validation</p><p>Cordialement,</p><p>L\'équipe Cluster</p>');
-            $mailer->send($email);
+            $activate = new Activate();
+            $activate->setStatus(0);
+            $activate->setUser($user);
+            $date = new DateTime('now');
+            $activate->setUpdatedAt($date);
+            $entityManager->persist($activate);
+            $entityManager->flush();
+            $email = $user->getEmail();
+            $token = $activate->getToken();
+            $this->sendActivationMail($token,$email,$mailer);
             $this->addFlash('success', 'Votre compte est en cours d\'activation');
             return new RedirectResponse($this->generateUrl('app_login'));
         }
